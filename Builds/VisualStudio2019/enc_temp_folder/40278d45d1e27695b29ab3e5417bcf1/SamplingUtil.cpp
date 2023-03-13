@@ -107,6 +107,5 @@ float SamplingUtil::rms(std::vector<float> buffer) {
 	for (auto amplitude : buffer) {
 		rms += amplitude * amplitude;
 	}
-
 	return sqrt(rms / buffer.size());
 }
