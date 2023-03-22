@@ -67,25 +67,33 @@ public:
     //==============================================================================
     void setPedal(bool val);
 
-    void setMaxLayers(int val) { maxLayers = val; }
-    int getMaxLayers() { return maxLayers; }
+    void setMaxLayers(int val) { *maxLayers = val; }
+    int getMaxLayers() { return *maxLayers; }
 
-    void setRise(double val) { rise = val; }
-    double getRise() { return rise; }
+    void setRise(float val) { *rise = val; }
+    float getRise() { return *rise; }
 
-    void setTail(double val) { tail = val; }
-    double getTail() { return tail; }
+    void setTail(float val) { *tail = val; }
+    float getTail() { return *tail; }
 
-    void setWet(double val) { wet = val; }
-    double getWet() { return wet; }
+    void setWet(float val) { *wet = val; }
+    float getWet() { return *wet; }
 
-    void setDry(double val) { dry = val; }
-    double getDry() { return dry; }
+    void setDry(float val) { *dry = val; }
+    float getDry() { return *dry; }
 
-    void setTargetSampleLength(double val) { targetSampleLength = val; }
-    double getTargetSampleLength() { return targetSampleLength; }
+    void setTargetSampleLength(float val) { *period = val; }
+    float getTargetSampleLength() { return *period; }
+
+    void setHoldToSustain(bool val) { *holdToggle = val; }
+    bool getHoldToSustain() { return *holdToggle > 0.5f; }
+
+    void setKeycode(int val) { *keycode = val; }
+    int getKeycode() { return *keycode; }
 
 private:
+    AudioProcessorValueTreeState parameters;
+
     //==============================================================================
     TransientDetector* td;
 
@@ -97,13 +105,16 @@ private:
         gettingPhrase = false,
         phraseFound = false;
 
-    int maxLayers = 1, sampleRate;
+    int sampleRate;
 
-    double rise = 0.5,
-        tail = 1.0,
-        wet = 70.0,
-        dry = 100.0,
-        targetSampleLength = 1.0;
+    std::atomic<float>* rise,
+        * tail,
+        * wet,
+        * dry,
+        * period,
+        * maxLayers,
+        * holdToggle,
+        * keycode;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SustainPedalAudioProcessor)

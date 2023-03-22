@@ -1,15 +1,13 @@
 #include "TransientDetector.h"
 
-std::mutex m;
-
-TransientDetector::TransientDetector(int sampleRate, int bufferSize, double frameTime, double overlap, double trackingTime, double transientLockoutTime) : 
+TransientDetector::TransientDetector(int sampleRate, int bufferSize, double frameTime, double overlap, double trackingTime, double blockForNSeconds) : 
 	fft(1), 
 	sampleRate(sampleRate), 
 	bufferSize(bufferSize), 
 	frameTime(frameTime), 
 	overlap(overlap), 
 	trackingTime(trackingTime),
-	transientLockoutTime(transientLockoutTime)
+	blockForNSeconds(blockForNSeconds)
 {
 	setup();
 }
@@ -33,7 +31,8 @@ void TransientDetector::setup()
 	fft = dsp::FFT(order);
 
 	nTrackedFrames = trackingTime * sampleRate / frameSize;
-	nLockoutFrames = transientLockoutTime * sampleRate / frameSize;
+
+	blockForNFrames = blockForNSeconds * sampleRate / frameSize;
 
 	totalSpectralFlux = 0.f;
 }
@@ -69,13 +68,15 @@ bool TransientDetector::detectTransient()
 
 	// Threshold to filter out low signals
 	bool keep = applyThreshold(spectralFlux);
-	if (!keep) {
+	if (!keep && blockingCounter > 0) {
 		thresholdedFluxes.push_back(0);
+		blockingCounter = std::min(blockingCounter - 1, 0);
 		return false;
 	}
+	blockingCounter = blockForNFrames;
 	thresholdedFluxes.push_back(spectralFlux);
 
-	// Check if the last 3 spectral fluxes indicate a peak
+	// Check if the last 5 spectral fluxes indicate a peak at the previous flux
 	auto tfSize = thresholdedFluxes.size();
 	if (tfSize < 5 || !(thresholdedFluxes[tfSize - 2] > thresholdedFluxes[tfSize - 1] 
 		&& thresholdedFluxes[tfSize - 2] > thresholdedFluxes[tfSize - 5]

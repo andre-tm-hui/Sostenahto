@@ -15,9 +15,9 @@ BEGIN
   BEGIN
     BLOCK "040904E4"
     BEGIN
-      VALUE "FileDescription",  "SustainPedal\0"
+      VALUE "FileDescription",  "Sustenato\0"
       VALUE "FileVersion",  "1.0.0\0"
-      VALUE "ProductName",  "SustainPedal\0"
+      VALUE "ProductName",  "Sustenato\0"
       VALUE "ProductVersion",  "1.0.0\0"
     END
   END

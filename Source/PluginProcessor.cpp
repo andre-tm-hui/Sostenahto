@@ -10,9 +10,19 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SustainPedalAudioProcessor::SustainPedalAudioProcessor()
+SustainPedalAudioProcessor::SustainPedalAudioProcessor() :
+    parameters(*this, nullptr, Identifier("APVTS"), {
+            std::make_unique<AudioParameterFloat> ("wet", "Wet", 0.f, 100.f, 70.f),
+            std::make_unique<AudioParameterFloat> ("dry", "Dry", 0.f, 100.f, 100.f),
+            std::make_unique<AudioParameterFloat>("rise", "Rise", 0.f, 5.f, 0.5f),
+            std::make_unique<AudioParameterFloat>("tail", "Tail", 0.f, 5.f, 1.f),
+            std::make_unique<AudioParameterFloat>("period", "Period", 0.f, 3.f, 1.f),
+            std::make_unique<AudioParameterInt>("maxLayers", "Max Layers", 1, 10, 1),
+            std::make_unique<AudioParameterBool>("holdToggle", "Hold to sustain", true),
+            std::make_unique<AudioParameterInt>("keycode", "Keycode", -1, INT_MAX, -1)
+        })
 #ifndef JucePlugin_PreferredChannelConfigurations
-    : AudioProcessor(BusesProperties()
+    , AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
 #if ! JucePlugin_IsSynth
         .withInput("Input", AudioChannelSet::stereo(), true)
@@ -22,10 +32,19 @@ SustainPedalAudioProcessor::SustainPedalAudioProcessor()
     )
 #endif
 {
+    wet = parameters.getRawParameterValue("wet");
+    dry = parameters.getRawParameterValue("dry");
+    rise = parameters.getRawParameterValue("rise");
+    tail = parameters.getRawParameterValue("tail");
+    period = parameters.getRawParameterValue("period");
+    maxLayers = parameters.getRawParameterValue("maxLayers");
+    holdToggle = parameters.getRawParameterValue("holdToggle");
+    keycode = parameters.getRawParameterValue("keycode");
 }
 
 SustainPedalAudioProcessor::~SustainPedalAudioProcessor()
 {
+    delete td;
 }
 
 //==============================================================================
@@ -137,12 +156,11 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    if (totalNumInputChannels == 0 || totalNumOutputChannels == 0) return;
+
     int nSamples = buffer.getNumSamples();
 
-    auto* channelData = buffer.getWritePointer(1);
-    auto* channel2Data = buffer.getWritePointer(0);
+    auto* channelData = buffer.getWritePointer(0);
     td->process(std::vector<float>(channelData, channelData + nSamples), tailSignal);
     // Record the tail of a transient
     if (tailSignal.size() < sampleRate * 5) {
@@ -150,13 +168,12 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
         memcpy(&tailSignal[tailSignal.size() - nSamples], channelData, sizeof(float) * nSamples);
     }
 
-    double dryDecimal = dry / 100.0;
+    float dryDecimal = *dry / 100.0;
     for (int i = 0; i < nSamples; i++) {
         channelData[i] *= dryDecimal;
-        channel2Data[i] = channelData[i];
     }
 
-    double wetDecimal = wet / 100.0;
+    float wetDecimal = *wet / 100.0;
     // If the pedal is triggered
     for (int i = 0; i < layers.size();) {
         auto sustain = layers[i]->getSample(nSamples, wetDecimal, sampleRate);
@@ -181,6 +198,10 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
         buffer.addFrom(1, 0, &sustain[0], nSamples);
         i++;
     }
+
+    for (int i = 1; i < totalNumOutputChannels; i++) {
+        buffer.addFrom(i, 0, channelData, nSamples);
+    }
 }
 
 //==============================================================================
@@ -191,7 +212,7 @@ bool SustainPedalAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* SustainPedalAudioProcessor::createEditor()
 {
-    return new SustainPedalAudioProcessorEditor (*this);
+    return new SustainPedalAudioProcessorEditor (*this, parameters);
 }
 
 //==============================================================================
@@ -200,19 +221,28 @@ void SustainPedalAudioProcessor::getStateInformation (MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    auto state = parameters.copyState();
+    state.getChildWithProperty("id", "keycode").setProperty("value", var(*keycode), nullptr);
+    std::unique_ptr<XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
+    DBG(xml->toString());
 }
 
 void SustainPedalAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    DBG(xmlState.get()->toString());
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(parameters.state.getType()))
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
-void SustainPedalAudioProcessor::setPedal(bool val) {
-    DBG((val ? "set pedal down" : "set pedal up"));
-    pedalDown = val;
+void SustainPedalAudioProcessor::setPedal(bool val) {    pedalDown = val;
     if (pedalDown) {
-        while (layers.size() >= maxLayers) {
+        while (layers.size() >= *maxLayers) {
             layers[0]->fade(false);
             fadingOut.push_back(layers[0]);
             layers.erase(layers.begin());
@@ -220,15 +250,14 @@ void SustainPedalAudioProcessor::setPedal(bool val) {
         for (auto layer : layers) {
             layer->fade(true);
         }
-        sample = SamplingUtil::getSample(tailSignal, sampleRate * targetSampleLength, 2.0);
-        layers.emplace_back(new SustainData(sample, &rise, &tail));
+        sample = SamplingUtil::getSample(tailSignal, sampleRate * *period, 2.0);
+        layers.emplace_back(new SustainData(sample, *rise, *tail));
     }
     else {
         for (auto layer : layers) {
             layer->fade(false);
         }
     }
-    DBG("done");
 }
 
 //==============================================================================

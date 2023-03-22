@@ -11,7 +11,7 @@ enum class TDState {
 class TransientDetector
 {
 public:
-	TransientDetector(int sampleRate, int bufferSize, double frameTime = 0.04, double overlap = 2.0, double trackingTime = 2.0, double transientLockoutTime = 0.4);
+	TransientDetector(int sampleRate, int bufferSize, double frameTime = 0.04, double overlap = 2.0, double trackingTime = 2.0, double blockForNSeconds = 0.5);
 	void process(std::vector<float> buffer, std::vector<float>& tailBuffer);
 
 	void setSampleRate(int val) { sampleRate = val; setup(); }
@@ -19,7 +19,7 @@ public:
 	void setOverlap(double val) { overlap = val; setup(); }
 	void setFrameTime(double val) { frameTime = val; setup(); }
 	void setTrackingTime(double val) { trackingTime = val; setup(); }
-	void setTransientLockoutTime(double val) { transientLockoutTime = val; setup(); }
+	void setBlockForNSeconds(double val) { blockForNSeconds = val; setup(); }
 
 	std::vector<float> getSpectralFluxes() { return thresholdedFluxes; }
 
@@ -40,8 +40,8 @@ private:
 		thresholdedFluxes;
 	std::vector<bool> isTransient;
 
-	int sampleRate, bufferSize, frameSize, paddingSize, windowSize, fftSize, nTrackedFrames, nLockoutFrames;
-	double overlap, frameTime, trackingTime, transientLockoutTime;
+	int sampleRate, bufferSize, frameSize, paddingSize, windowSize, fftSize, nTrackedFrames, blockForNFrames, blockingCounter = 0;
+	double overlap, frameTime, trackingTime, transientLockoutTime, blockForNSeconds;
 	float totalSpectralFlux;
 };
 

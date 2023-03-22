@@ -10,66 +10,74 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor& p)
-    : AudioProcessorEditor(&p), Timer(), KeyListener(), audioProcessor(p), pedalToggle()
+SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor& p, AudioProcessorValueTreeState& vts)
+    : AudioProcessorEditor(&p), Timer(), KeyListener(), audioProcessor(p), vts(vts)
 {
+    LookAndFeel::setDefaultLookAndFeel(&lf);
+
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (1200, 800);
+    setSize (400, 680);
 
-    // Setup wet and dry sliders
-    setupSlider(wetSlider, audioProcessor.getWet(), 0, 100, 1, wetLabel, "Wet", "%");
-    wetSlider.onValueChange = [this] { audioProcessor.setWet(wetSlider.getValue()); };
-    wetSlider.setTopLeftPosition(30, 40);
-    setupSlider(drySlider, audioProcessor.getDry(), 0, 100, 1, dryLabel, "Dry", "%");
-    drySlider.onValueChange = [this] { audioProcessor.setDry(drySlider.getValue()); };
-    drySlider.setTopLeftPosition(110, 40);
+    addAndMakeVisible(infoLabel);
+    infoLabel.setBounds(10, 420, 180, 240);
+    infoLabel.setColour(Label::ColourIds::backgroundColourId, Colour(0xFF404040));
+    infoLabel.setJustificationType(Justification::centredLeft);
+    infoLabel.setBorderSize(BorderSize<int>(10));
 
-    // Setup rise/tail sliders
-    setupSlider(riseSlider, audioProcessor.getRise(), 0, 5, 0.05, riseLabel, "Rise", "s");
-    riseSlider.onValueChange = [this] { audioProcessor.setRise(riseSlider.getValue()); };
-    riseSlider.setTopLeftPosition(30, 160);
-    setupSlider(tailSlider, audioProcessor.getTail(), 0, 5, 0.05, tailLabel, "Tail", "s");
-    tailSlider.onValueChange = [this] { audioProcessor.setTail(tailSlider.getValue()); };
-    tailSlider.setTopLeftPosition(110, 160);
-
-    // Setup max-layers slider
-    setupSlider(maxLayersSlider, audioProcessor.getMaxLayers(), 1, 10, 1, maxLayersLabel, "Layers");
-    maxLayersSlider.onValueChange = [this] { audioProcessor.setMaxLayers(maxLayersSlider.getValue()); };
-    maxLayersSlider.setTopLeftPosition(30, 300);
+    wetDial = new CustomDial(audioProcessor.getWet(), 0, 100, 1, "Wet", infoLabel, "The volume of the sustain.\n\n(0-100%)", "%");
+    addAndMakeVisible(wetDial);
+    wetDial->setTopLeftPosition(20, 50);
+    wetAttachment.reset(new SliderAttachment(vts, "wet", *wetDial));
     
-    // Setup advanced settings sliders
-    setupSlider(targetSampleLengthSlider, audioProcessor.getTargetSampleLength(), 0, 3, 0.1, targetSampleLengthLabel, "Target Sample Length", "s");
-    targetSampleLengthSlider.onValueChange = [this] { audioProcessor.setTargetSampleLength(targetSampleLengthSlider.getValue()); };
-    targetSampleLengthSlider.setTopLeftPosition(30, 440);
+    dryDial = new CustomDial(audioProcessor.getDry(), 0, 100, 1, "Dry", infoLabel, "The volume of the original input signal.\n\n(0-100%)", "%");
+    addAndMakeVisible(dryDial);
+    dryDial->setTopLeftPosition(100, 50);
+    dryAttachment.reset(new SliderAttachment(vts, "dry", *dryDial));
+    
+    riseDial = new CustomDial(audioProcessor.getRise(), 0, 5, 0.05, "Rise", infoLabel, "The fade-in time of the sustained sound.\n\n(0.0-5.0s)", "s");
+    addAndMakeVisible(riseDial);
+    riseDial->setTopLeftPosition(20, 180);
+    riseAttachment.reset(new SliderAttachment(vts, "rise", *riseDial));
+    
+    tailDial = new CustomDial(audioProcessor.getTail(), 0, 5, 0.05, "Tail", infoLabel, "The fade-out time of the sustained sound.\n\n(0.0-5.0s)", "s");
+    addAndMakeVisible(tailDial);
+    tailDial->setTopLeftPosition(100, 180);
+    tailAttachment.reset(new SliderAttachment(vts, "tail", *tailDial));
+    
+    maxLayersDial = new CustomDial(audioProcessor.getMaxLayers(), 1, 10, 1, "Max Layers", infoLabel, "The maximum number of overlapping sustain layers.\n\n(1-10)");
+    addAndMakeVisible(maxLayersDial);
+    maxLayersDial->setTopLeftPosition(20, 310);
+    maxLayersAttachment.reset(new SliderAttachment(vts, "maxLayers", *maxLayersDial));
 
-    // Setup pedal settings
-    addAndMakeVisible(pedalToggle);
-    pedalToggle.setClickingTogglesState(true);
-    pedalToggle.setBounds(210, 40, 160, 20);
-    pedalToggle.onStateChange = [this] { audioProcessor.setPedal(pedalToggle.getToggleState()); };
-    addAndMakeVisible(bindButton);
-    bindButton.setButtonText("None");
-    bindButton.setBounds(275, 70, 100, 24);
-    bindButton.onClick = [this] { rebinding = true; };
-    keybindLabel.setText("Keybind:", dontSendNotification);
-    keybindLabel.attachToComponent(&bindButton, true);
-    keybindLabel.setSize(80, 24);
-    addAndMakeVisible(holdToggle);
-    holdToggle.setClickingTogglesState(true);
-    holdToggle.setToggleState(true, dontSendNotification);
-    holdToggle.setBounds(210, 100, 160, 20);
-    holdToggle.setButtonText("Hold to sustain");
-    holdToggle.onClick = [this] { hold = holdToggle.getToggleState(); };
+    periodDial = new CustomDial(audioProcessor.getTargetSampleLength(), 0, 3, 0.1, "Period", infoLabel, "The target length of the looped signal.\n\nChanges the period of the oscilating effect commonly heard in polyphonic sounds (chords etc.).\n\n(0.0-3.0s)", "s");
+    addAndMakeVisible(periodDial);
+    periodDial->setTopLeftPosition(100, 310);
+    periodAttachment.reset(new SliderAttachment(vts, "period", *periodDial));
+
+    pedalWidget = new PedalWidget(audioProcessor, infoLabel);
+    addAndMakeVisible(pedalWidget);
+    pedalWidget->setTopLeftPosition(200, 0);
 
     addKeyListener(this);
     setWantsKeyboardFocus(true);
-
-    //startTimer(0.1);
 }
 
 SustainPedalAudioProcessorEditor::~SustainPedalAudioProcessorEditor()
 {
+    maxLayersAttachment.reset();
+    riseAttachment.reset();
+    tailAttachment.reset();
+    wetAttachment.reset();
+    dryAttachment.reset();
+    periodAttachment.reset();
+    delete maxLayersDial;
+    delete riseDial;
+    delete tailDial;
+    delete wetDial;
+    delete dryDial;
+    delete periodDial;
+    delete pedalWidget;
 }
 
 //==============================================================================
@@ -81,9 +89,7 @@ void SustainPedalAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::white);
     g.setFont (15.0f);
 
-    //plot(g, audioProcessor.getLatestSample(), 400, 260, 800, 200, 500);
-    //plot(g, audioProcessor.getLatestRecording(), 400, 40, 800, 200, 500);
-    //plot(g, audioProcessor.getTransients(), 400, 480, 800, 200, 0.1, false);
+    //g.drawImageWithin(pedalToggle.getToggleState() ? pedalDown : pedalUp, 190, 0, 200, 650, RectanglePlacement::Flags::stretchToFit);
 }
 
 void SustainPedalAudioProcessorEditor::resized()
@@ -97,19 +103,19 @@ void SustainPedalAudioProcessorEditor::timerCallback() {
 }
 
 bool SustainPedalAudioProcessorEditor::keyPressed(const KeyPress& key, Component*) {
-    if (rebinding) {
-        bindButton.setButtonText(key.getTextDescription());
-        keycode = key.getKeyCode();
-        rebinding = false;
+    if (pedalWidget->rebinding) {
+        pedalWidget->bindButton.setButtonText(key.getTextDescription());
+        vts.state.getChildWithProperty("id", "keycode").setProperty("value", var(key.getKeyCode()), nullptr);
+        pedalWidget->rebinding = false;
         return true;
     }
 
-    if (key.getKeyCode() == keycode) {
-        if (hold) {
-            pedalToggle.setToggleState(true, juce::NotificationType::sendNotification);
+    if (key.getKeyCode() == audioProcessor.getKeycode()) {
+        if (pedalWidget->hold) {
+            pedalWidget->pedalToggle.setToggleState(true, juce::NotificationType::sendNotification);
         }
         else {
-            pedalToggle.setToggleState(!pedalToggle.getToggleState(), juce::NotificationType::sendNotification);
+            pedalWidget->pedalToggle.setToggleState(!pedalWidget->pedalToggle.getToggleState(), juce::NotificationType::sendNotification);
         }
     }
 
@@ -117,26 +123,12 @@ bool SustainPedalAudioProcessorEditor::keyPressed(const KeyPress& key, Component
 }
 
 bool SustainPedalAudioProcessorEditor::keyStateChanged(bool isKeyDown, Component*) {
-    if (hold && !KeyPress(keycode).isCurrentlyDown()) {
-        pedalToggle.setToggleState(false, juce::NotificationType::sendNotification);
+    if (pedalWidget->hold && !KeyPress(audioProcessor.getKeycode()).isCurrentlyDown()) {
+        pedalWidget->pedalToggle.setToggleState(false, juce::NotificationType::sendNotification);
     }
     return true;
 }
 
-void SustainPedalAudioProcessorEditor::setupSlider(Slider& slider, double defaultValue, double min, double max, double inc, Label& label, std::string labelText, std::string suffix, double width, double height) {
-    addAndMakeVisible(slider);
-    slider.setSize(width, width);
-    slider.setRange(min, max, inc);
-    slider.setValue(defaultValue, juce::dontSendNotification);
-    slider.setTextValueSuffix(suffix);
-    slider.setTextBoxStyle(Slider::TextBoxBelow, false, 0.75 * width, (height - width) / 2.0);
-    slider.setSliderStyle(Slider::SliderStyle::Rotary);
-    addAndMakeVisible(slider);
-    label.setText(labelText, juce::dontSendNotification);
-    label.attachToComponent(&slider, false);
-    label.setSize(width, (height - width) / 2.0);
-    label.setJustificationType(Justification::centred);
-}
 
 void SustainPedalAudioProcessorEditor::plot(Graphics& g, std::vector<float> data, int x, int y, int width, int height, double yScale, bool middle) {
     int nPoints = data.size();

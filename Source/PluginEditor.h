@@ -10,14 +10,20 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "CustomLookAndFeel.h"
+#include "widgets/CustomDial.h"
+#include "widgets/PedalWidget.h"
 
 //==============================================================================
 /**
 */
+
+typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+
 class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public Timer, public KeyListener
 {
 public:
-    SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor&);
+    SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor&, AudioProcessorValueTreeState&);
     ~SustainPedalAudioProcessorEditor() override;
 
     //==============================================================================
@@ -30,29 +36,28 @@ public:
 
 private:
     void plot(Graphics& g, std::vector<float> data, int x, int y, int width, int height, double yScale, bool middle = true);
-    void setupSlider(Slider& slider, double defaultValue, double min, double max, double inc, Label& label, std::string labelText, std::string suffix = "", double width = 80, double height = 120);
 
-    Slider  maxLayersSlider,
-        riseSlider,
-        tailSlider,
-        wetSlider,
-        drySlider,
-        targetSampleLengthSlider;
+    AudioProcessorValueTreeState& vts;
 
-    Label maxLayersLabel,
-        riseLabel,
-        tailLabel,
-        wetLabel,
-        dryLabel,
-        targetSampleLengthLabel,
-        keybindLabel;
+    CustomLookAndFeel lf;
 
-    ToggleButton pedalToggle, holdToggle;
-    TextButton bindButton;
+    Label infoLabel;
 
-    int keycode = -1;
-    bool rebinding = false,
-        hold = true;
+    CustomDial* maxLayersDial,
+        *riseDial,
+        *tailDial,
+        *wetDial,
+        *dryDial,
+        *periodDial;
+
+    std::unique_ptr<SliderAttachment> maxLayersAttachment,
+        riseAttachment,
+        tailAttachment,
+        wetAttachment,
+        dryAttachment,
+        periodAttachment;
+
+    PedalWidget* pedalWidget;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

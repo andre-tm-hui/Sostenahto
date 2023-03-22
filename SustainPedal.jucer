@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="gDVZon" name="SustainPedal" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1">
-  <MAINGROUP id="vrJnIo" name="SustainPedal">
+<JUCERPROJECT id="gDVZon" name="Sustenato" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1"
+              splashScreenColour="Dark" pluginFormats="buildAU,buildStandalone,buildVST3"
+              pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginVST3Category="Fx,Sampler"
+              pluginDesc="Sustenato for stringed instruments" pluginManufacturer="Andre"
+              companyWebsite="andre-tm-hui.github.io" headerPath="E:\C++ Libraries\asiosdk_2.3.3_2019-06-14\common">
+  <MAINGROUP id="vrJnIo" name="Sustenato">
     <GROUP id="{E218D6CA-93C3-F37B-AC8F-45001CACCC66}" name="Source">
+      <FILE id="fsPjmZ" name="CustomLookAndFeel.cpp" compile="1" resource="0"
+            file="Source/CustomLookAndFeel.cpp"/>
+      <FILE id="lssLVN" name="CustomLookAndFeel.h" compile="0" resource="0"
+            file="Source/CustomLookAndFeel.h"/>
       <FILE id="DbqYar" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="KZzb3T" name="PluginProcessor.h" compile="0" resource="0"
@@ -11,7 +19,22 @@
       <FILE id="u8MfV6" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="ayeYQl" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="Pczjj3" name="SamplingUtil.h" compile="0" resource="0" file="Source/SamplingUtil.h"/>
+      <FILE id="VMpBsU" name="SustainData.cpp" compile="1" resource="0" file="Source/SustainData.cpp"/>
+      <FILE id="Za92BF" name="SustainData.h" compile="0" resource="0" file="Source/SustainData.h"/>
+      <FILE id="ISNLSS" name="TransientDetector.cpp" compile="1" resource="0"
+            file="Source/TransientDetector.cpp"/>
+      <FILE id="ZL37K6" name="TransientDetector.h" compile="0" resource="0"
+            file="Source/TransientDetector.h"/>
+      <FILE id="aCuKd1" name="SamplingUtil.cpp" compile="1" resource="0"
+            file="Source/SamplingUtil.cpp"/>
     </GROUP>
+    <FILE id="Y0NJHd" name="CustomDial.h" compile="0" resource="0" file="Source/widgets/CustomDial.h"/>
+    <FILE id="Div9YW" name="MousePassthrough.h" compile="0" resource="0"
+          file="Source/widgets/MousePassthrough.h"/>
+    <FILE id="Z7XIaG" name="pedalDown.png" compile="0" resource="1" file="pedalDown.png"/>
+    <FILE id="m0eBIn" name="pedalUp.png" compile="0" resource="1" file="pedalUp.png"/>
+    <FILE id="Cq0CKQ" name="PedalWidget.h" compile="0" resource="0" file="Source/widgets/PedalWidget.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
                JUCE_ASIO="1"/>

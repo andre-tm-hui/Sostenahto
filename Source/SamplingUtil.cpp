@@ -5,8 +5,6 @@ std::vector<float> SamplingUtil::getSample(std::vector<float> buffer, int target
 	AutoCorrelationData acd = getPeriod(buffer, adjustedTarget);//getPeriod(std::vector<float>(buffer.begin() + startPoint, buffer.end()), fftSize * sampleTargetFactor);
 	buffer = dynamicRangeCompression(buffer, acd.period * 2);
 	auto sample = crossfadeSelf(buffer, acd.targetSize, buffer.size() - acd.targetSize, crossfadeOverlap);
-	DBG(acd.period);
-	DBG(sample.size());
 	return sample;// dynamicRangeCompression(sample, acd.period * 2);
 }
 
