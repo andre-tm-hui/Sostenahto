@@ -12,6 +12,7 @@
 #include "TransientDetector.h"
 #include "SustainData.h"
 #include "SamplingUtil.h"
+#include "util/LicenseManager.h"
 
 //==============================================================================
 /**
@@ -91,6 +92,13 @@ public:
     void setKeycode(int val) { *keycode = val; }
     int getKeycode() { return *keycode; }
 
+    void setLicenseKey(std::string val) { licenseKey = val; LicenseManager::saveLicense(licenseKey); }
+    std::string getLicenseKey() { return licenseKey; }
+
+    //==============================================================================
+    void start() { ready = true; }
+    bool isReady() { return ready; }
+
 private:
     AudioProcessorValueTreeState parameters;
 
@@ -101,7 +109,8 @@ private:
     std::vector<SustainData*> layers;
     std::vector<SustainData*> fadingOut;
 
-    bool pedalDown = false,
+    bool ready = false,
+        pedalDown = false,
         gettingPhrase = false,
         phraseFound = false;
 
@@ -115,6 +124,8 @@ private:
         * maxLayers,
         * holdToggle,
         * keycode;
+
+    std::string licenseKey = "";
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SustainPedalAudioProcessor)

@@ -5,9 +5,27 @@
               splashScreenColour="Dark" pluginFormats="buildAU,buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginVST3Category="Fx,Sampler"
               pluginDesc="Sustenato for stringed instruments" pluginManufacturer="Andre"
-              companyWebsite="andre-tm-hui.github.io" headerPath="E:\C++ Libraries\asiosdk_2.3.3_2019-06-14\common">
+              companyWebsite="andre-tm-hui.github.io" headerPath="E:\C++ Libraries\asiosdk_2.3.3_2019-06-14\common&#10;E:\C++ Libraries\openssl-3.1.0\include">
   <MAINGROUP id="vrJnIo" name="Sustenato">
     <GROUP id="{E218D6CA-93C3-F37B-AC8F-45001CACCC66}" name="Source">
+      <GROUP id="{2DEDD399-F219-91E8-3C8E-634467F6BB6A}" name="Util">
+        <FILE id="uENdYW" name="DeviceIDGetter.cpp" compile="1" resource="0"
+              file="Source/util/DeviceIDGetter.cpp"/>
+        <FILE id="yB0PY3" name="DeviceIDGetter.h" compile="0" resource="0"
+              file="Source/util/DeviceIDGetter.h"/>
+        <FILE id="V1ebSM" name="LicenseManager.cpp" compile="1" resource="0"
+              file="Source/util/LicenseManager.cpp"/>
+        <FILE id="WgXe8r" name="LicenseManager.h" compile="0" resource="0"
+              file="Source/util/LicenseManager.h"/>
+        <FILE id="pPgAFx" name="Salt.h" compile="0" resource="0" file="Source/util/Salt.h"/>
+      </GROUP>
+      <GROUP id="{6DFFD775-EC67-68C4-E2DA-D42E64C5EDC3}" name="Widgets">
+        <FILE id="Y0NJHd" name="CustomDial.h" compile="0" resource="0" file="Source/widgets/CustomDial.h"/>
+        <FILE id="Div9YW" name="MousePassthrough.h" compile="0" resource="0"
+              file="Source/widgets/MousePassthrough.h"/>
+        <FILE id="Cq0CKQ" name="PedalWidget.h" compile="0" resource="0" file="Source/widgets/PedalWidget.h"/>
+        <FILE id="uuHXCz" name="SplashScreen.h" compile="0" resource="0" file="Source/widgets/SplashScreen.h"/>
+      </GROUP>
       <FILE id="fsPjmZ" name="CustomLookAndFeel.cpp" compile="1" resource="0"
             file="Source/CustomLookAndFeel.cpp"/>
       <FILE id="lssLVN" name="CustomLookAndFeel.h" compile="0" resource="0"
@@ -29,12 +47,15 @@
       <FILE id="aCuKd1" name="SamplingUtil.cpp" compile="1" resource="0"
             file="Source/SamplingUtil.cpp"/>
     </GROUP>
-    <FILE id="Y0NJHd" name="CustomDial.h" compile="0" resource="0" file="Source/widgets/CustomDial.h"/>
-    <FILE id="Div9YW" name="MousePassthrough.h" compile="0" resource="0"
-          file="Source/widgets/MousePassthrough.h"/>
+    <FILE id="ZHsV0S" name="donateButton.png" compile="0" resource="1"
+          file="donateButton.png"/>
+    <FILE id="z8nx4P" name="donatedAlreadyButton.png" compile="0" resource="1"
+          file="donatedAlreadyButton.png"/>
     <FILE id="Z7XIaG" name="pedalDown.png" compile="0" resource="1" file="pedalDown.png"/>
     <FILE id="m0eBIn" name="pedalUp.png" compile="0" resource="1" file="pedalUp.png"/>
-    <FILE id="Cq0CKQ" name="PedalWidget.h" compile="0" resource="0" file="Source/widgets/PedalWidget.h"/>
+    <FILE id="BILxkW" name="skipButton.png" compile="0" resource="1" file="skipButton.png"/>
+    <FILE id="LaRdXO" name="splashScreen.png" compile="0" resource="1"
+          file="splashScreen.png"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
                JUCE_ASIO="1"/>
@@ -58,6 +79,7 @@
         <MODULEPATH id="juce_gui_basics" path="../../C++ Libraries/JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../C++ Libraries/JUCE/modules"/>
         <MODULEPATH id="juce_dsp" path="../../C++ Libraries/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../C++ Libraries/JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
   </EXPORTFORMATS>
@@ -70,6 +92,7 @@
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>

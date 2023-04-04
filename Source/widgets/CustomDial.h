@@ -34,9 +34,7 @@ private:
 class CustomDial  : public juce::Slider
 {
 public:
-    CustomDial(double val, 
-        double min, 
-        double max, 
+    CustomDial(
         double inc, 
         std::string labelText, 
         Label& infoBox, 
@@ -48,8 +46,6 @@ public:
         infoBox(infoBox), 
         infoText(infoText) {
         setSize(width, width);
-        setRange(min, max, inc);
-        setValue(val, dontSendNotification);
         setTextValueSuffix(suffix);
         setTextBoxStyle(Slider::TextBoxBelow, false, 0.75 * width, (height - width) / 2.0);
         setSliderStyle(Slider::SliderStyle::Rotary);

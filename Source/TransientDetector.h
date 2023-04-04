@@ -11,7 +11,7 @@ enum class TDState {
 class TransientDetector
 {
 public:
-	TransientDetector(int sampleRate, int bufferSize, double frameTime = 0.04, double overlap = 2.0, double trackingTime = 2.0, double blockForNSeconds = 0.5);
+	TransientDetector(int sampleRate, int bufferSize, double frameTime = 0.04, double overlap = 2.0, double trackingTime = 2.0, double blockForNSeconds = 0.0);
 	void process(std::vector<float> buffer, std::vector<float>& tailBuffer);
 
 	void setSampleRate(int val) { sampleRate = val; setup(); }

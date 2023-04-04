@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor& p, AudioProcessorValueTreeState& vts)
+SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalAudioProcessor& p, AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor(&p), Timer(), KeyListener(), audioProcessor(p), vts(vts)
 {
     LookAndFeel::setDefaultLookAndFeel(&lf);
@@ -25,32 +25,32 @@ SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor (SustainPedal
     infoLabel.setJustificationType(Justification::centredLeft);
     infoLabel.setBorderSize(BorderSize<int>(10));
 
-    wetDial = new CustomDial(audioProcessor.getWet(), 0, 100, 1, "Wet", infoLabel, "The volume of the sustain.\n\n(0-100%)", "%");
+    wetDial = new CustomDial(1, "Wet", infoLabel, "The volume of the sustain.\n\n(0-100%)", "%");
     addAndMakeVisible(wetDial);
     wetDial->setTopLeftPosition(20, 50);
     wetAttachment.reset(new SliderAttachment(vts, "wet", *wetDial));
     
-    dryDial = new CustomDial(audioProcessor.getDry(), 0, 100, 1, "Dry", infoLabel, "The volume of the original input signal.\n\n(0-100%)", "%");
+    dryDial = new CustomDial(1, "Dry", infoLabel, "The volume of the original input signal.\n\n(0-100%)", "%");
     addAndMakeVisible(dryDial);
     dryDial->setTopLeftPosition(100, 50);
     dryAttachment.reset(new SliderAttachment(vts, "dry", *dryDial));
     
-    riseDial = new CustomDial(audioProcessor.getRise(), 0, 5, 0.05, "Rise", infoLabel, "The fade-in time of the sustained sound.\n\n(0.0-5.0s)", "s");
+    riseDial = new CustomDial(0.05, "Rise", infoLabel, "The fade-in time of the sustained sound.\n\n(0.0-5.0s)", "s");
     addAndMakeVisible(riseDial);
     riseDial->setTopLeftPosition(20, 180);
     riseAttachment.reset(new SliderAttachment(vts, "rise", *riseDial));
     
-    tailDial = new CustomDial(audioProcessor.getTail(), 0, 5, 0.05, "Tail", infoLabel, "The fade-out time of the sustained sound.\n\n(0.0-5.0s)", "s");
+    tailDial = new CustomDial(0.05, "Tail", infoLabel, "The fade-out time of the sustained sound.\n\n(0.0-5.0s)", "s");
     addAndMakeVisible(tailDial);
     tailDial->setTopLeftPosition(100, 180);
     tailAttachment.reset(new SliderAttachment(vts, "tail", *tailDial));
     
-    maxLayersDial = new CustomDial(audioProcessor.getMaxLayers(), 1, 10, 1, "Max Layers", infoLabel, "The maximum number of overlapping sustain layers.\n\n(1-10)");
+    maxLayersDial = new CustomDial(1, "Max Layers", infoLabel, "The maximum number of overlapping sustain layers.\n\n(1-10)");
     addAndMakeVisible(maxLayersDial);
     maxLayersDial->setTopLeftPosition(20, 310);
     maxLayersAttachment.reset(new SliderAttachment(vts, "maxLayers", *maxLayersDial));
 
-    periodDial = new CustomDial(audioProcessor.getTargetSampleLength(), 0, 3, 0.1, "Period", infoLabel, "The target length of the looped signal.\n\nChanges the period of the oscilating effect commonly heard in polyphonic sounds (chords etc.).\n\n(0.0-3.0s)", "s");
+    periodDial = new CustomDial(0.1, "Period", infoLabel, "The target length of the looped signal.\n\nChanges the period of the oscilating effect commonly heard in polyphonic sounds (chords etc.).\n\n(0.0-3.0s)", "s");
     addAndMakeVisible(periodDial);
     periodDial->setTopLeftPosition(100, 310);
     periodAttachment.reset(new SliderAttachment(vts, "period", *periodDial));
@@ -58,6 +58,9 @@ SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor (SustainPedal
     pedalWidget = new PedalWidget(audioProcessor, infoLabel);
     addAndMakeVisible(pedalWidget);
     pedalWidget->setTopLeftPosition(200, 0);
+
+    ss = new DonateSplashScreen(audioProcessor);
+    if (!audioProcessor.isReady()) addAndMakeVisible(ss);
 
     addKeyListener(this);
     setWantsKeyboardFocus(true);
@@ -78,6 +81,7 @@ SustainPedalAudioProcessorEditor::~SustainPedalAudioProcessorEditor()
     delete dryDial;
     delete periodDial;
     delete pedalWidget;
+    if (!audioProcessor.isReady()) delete ss;
 }
 
 //==============================================================================
@@ -103,6 +107,8 @@ void SustainPedalAudioProcessorEditor::timerCallback() {
 }
 
 bool SustainPedalAudioProcessorEditor::keyPressed(const KeyPress& key, Component*) {
+    if (!audioProcessor.isReady()) return true;
+
     if (pedalWidget->rebinding) {
         pedalWidget->bindButton.setButtonText(key.getTextDescription());
         vts.state.getChildWithProperty("id", "keycode").setProperty("value", var(key.getKeyCode()), nullptr);

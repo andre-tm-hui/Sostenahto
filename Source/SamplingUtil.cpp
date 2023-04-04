@@ -3,7 +3,8 @@
 std::vector<float> SamplingUtil::getSample(std::vector<float> buffer, int targetSampleLength, double crossfadeOverlap) {
 	int adjustedTarget = std::min((double)targetSampleLength, 0.4 * (double)buffer.size());
 	AutoCorrelationData acd = getPeriod(buffer, adjustedTarget);//getPeriod(std::vector<float>(buffer.begin() + startPoint, buffer.end()), fftSize * sampleTargetFactor);
-	buffer = dynamicRangeCompression(buffer, acd.period * 2);
+	DBG("Period: " + std::to_string(acd.period));
+																//buffer = dynamicRangeCompression(buffer, acd.period * 2);
 	auto sample = crossfadeSelf(buffer, acd.targetSize, buffer.size() - acd.targetSize, crossfadeOverlap);
 	return sample;// dynamicRangeCompression(sample, acd.period * 2);
 }

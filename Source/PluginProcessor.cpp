@@ -152,6 +152,8 @@ bool SustainPedalAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 
 void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+    if (!ready) return;
+
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
@@ -224,6 +226,7 @@ void SustainPedalAudioProcessor::getStateInformation (MemoryBlock& destData)
     auto state = parameters.copyState();
     state.getChildWithProperty("id", "keycode").setProperty("value", var(*keycode), nullptr);
     std::unique_ptr<XmlElement> xml(state.createXml());
+
     copyXmlToBinary(*xml, destData);
     DBG(xml->toString());
 }
@@ -238,9 +241,12 @@ void SustainPedalAudioProcessor::setStateInformation (const void* data, int size
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName(parameters.state.getType()))
             parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
+
+    licenseKey = LicenseManager::loadLicense();
 }
 
-void SustainPedalAudioProcessor::setPedal(bool val) {    pedalDown = val;
+void SustainPedalAudioProcessor::setPedal(bool val) {    
+    pedalDown = val;
     if (pedalDown) {
         while (layers.size() >= *maxLayers) {
             layers[0]->fade(false);

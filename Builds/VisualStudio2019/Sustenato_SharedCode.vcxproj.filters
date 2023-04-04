@@ -2,6 +2,12 @@
 
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Sustenato\Source\Util">
+      <UniqueIdentifier>{B1F00D12-4F31-6372-E068-E6D5FB5A086D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sustenato\Source\Widgets">
+      <UniqueIdentifier>{F3C77126-12ED-1CA1-0D52-4A26B4DB3B50}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Sustenato\Source">
       <UniqueIdentifier>{DDC43C60-4B8A-F510-E250-9DF04499DCE7}</UniqueIdentifier>
     </Filter>
@@ -413,6 +419,15 @@
     <Filter Include="JUCE Modules\juce_core">
       <UniqueIdentifier>{BAA582FA-40B7-320E-EE7A-4C3892C7BE72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JUCE Modules\juce_cryptography\encryption">
+      <UniqueIdentifier>{89B3E447-34BE-C691-638E-09796C6B647E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\juce_cryptography\hashing">
+      <UniqueIdentifier>{9BE78436-DBF4-658C-579B-ED19FFD0EB5D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\juce_cryptography">
+      <UniqueIdentifier>{21E7FA61-9E0A-4BA1-04B7-AF47AFA9CB8B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="JUCE Modules\juce_data_structures\app_properties">
       <UniqueIdentifier>{632B4C79-AF7D-BFB5-D006-5AE67F607130}</UniqueIdentifier>
     </Filter>
@@ -601,6 +616,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\util\DeviceIDGetter.cpp">
+      <Filter>Sustenato\Source\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\util\LicenseManager.cpp">
+      <Filter>Sustenato\Source\Util</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\CustomLookAndFeel.cpp">
       <Filter>Sustenato\Source</Filter>
     </ClCompile>
@@ -1912,6 +1933,30 @@
     <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_core\juce_core.mm">
       <Filter>JUCE Modules\juce_core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\encryption\juce_BlowFish.cpp">
+      <Filter>JUCE Modules\juce_cryptography\encryption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\encryption\juce_Primes.cpp">
+      <Filter>JUCE Modules\juce_cryptography\encryption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\encryption\juce_RSAKey.cpp">
+      <Filter>JUCE Modules\juce_cryptography\encryption</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\hashing\juce_MD5.cpp">
+      <Filter>JUCE Modules\juce_cryptography\hashing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\hashing\juce_SHA256.cpp">
+      <Filter>JUCE Modules\juce_cryptography\hashing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\hashing\juce_Whirlpool.cpp">
+      <Filter>JUCE Modules\juce_cryptography\hashing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\juce_cryptography.cpp">
+      <Filter>JUCE Modules\juce_cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\juce_cryptography.mm">
+      <Filter>JUCE Modules\juce_cryptography</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_data_structures\app_properties\juce_ApplicationProperties.cpp">
       <Filter>JUCE Modules\juce_data_structures\app_properties</Filter>
     </ClCompile>
@@ -3040,6 +3085,9 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_core.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\include_juce_cryptography.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_data_structures.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
@@ -3060,6 +3108,27 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\util\DeviceIDGetter.h">
+      <Filter>Sustenato\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\util\LicenseManager.h">
+      <Filter>Sustenato\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\util\Salt.h">
+      <Filter>Sustenato\Source\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\widgets\CustomDial.h">
+      <Filter>Sustenato\Source\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\widgets\MousePassthrough.h">
+      <Filter>Sustenato\Source\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\widgets\PedalWidget.h">
+      <Filter>Sustenato\Source\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\widgets\SplashScreen.h">
+      <Filter>Sustenato\Source\Widgets</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\CustomLookAndFeel.h">
       <Filter>Sustenato\Source</Filter>
     </ClInclude>
@@ -3077,15 +3146,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Source\TransientDetector.h">
       <Filter>Sustenato\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\widgets\CustomDial.h">
-      <Filter>Sustenato</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\widgets\MousePassthrough.h">
-      <Filter>Sustenato</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\widgets\PedalWidget.h">
-      <Filter>Sustenato</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>
@@ -4866,6 +4926,27 @@
     <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_core\juce_core.h">
       <Filter>JUCE Modules\juce_core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\encryption\juce_BlowFish.h">
+      <Filter>JUCE Modules\juce_cryptography\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\encryption\juce_Primes.h">
+      <Filter>JUCE Modules\juce_cryptography\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\encryption\juce_RSAKey.h">
+      <Filter>JUCE Modules\juce_cryptography\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\hashing\juce_MD5.h">
+      <Filter>JUCE Modules\juce_cryptography\hashing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\hashing\juce_SHA256.h">
+      <Filter>JUCE Modules\juce_cryptography\hashing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\hashing\juce_Whirlpool.h">
+      <Filter>JUCE Modules\juce_cryptography\hashing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_cryptography\juce_cryptography.h">
+      <Filter>JUCE Modules\juce_cryptography</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_data_structures\app_properties\juce_ApplicationProperties.h">
       <Filter>JUCE Modules\juce_data_structures\app_properties</Filter>
     </ClInclude>
@@ -5930,10 +6011,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\donateButton.png">
+      <Filter>Sustenato</Filter>
+    </None>
+    <None Include="..\..\donatedAlreadyButton.png">
+      <Filter>Sustenato</Filter>
+    </None>
     <None Include="..\..\pedalDown.png">
       <Filter>Sustenato</Filter>
     </None>
     <None Include="..\..\pedalUp.png">
+      <Filter>Sustenato</Filter>
+    </None>
+    <None Include="..\..\skipButton.png">
+      <Filter>Sustenato</Filter>
+    </None>
+    <None Include="..\..\splashScreen.png">
       <Filter>Sustenato</Filter>
     </None>
     <None Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt">

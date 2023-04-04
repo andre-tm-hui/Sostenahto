@@ -68,13 +68,14 @@ bool TransientDetector::detectTransient()
 
 	// Threshold to filter out low signals
 	bool keep = applyThreshold(spectralFlux);
-	if (!keep && blockingCounter > 0) {
+	if (!keep || blockingCounter > 0) {
 		thresholdedFluxes.push_back(0);
 		blockingCounter = std::min(blockingCounter - 1, 0);
-		return false;
 	}
-	blockingCounter = blockForNFrames;
-	thresholdedFluxes.push_back(spectralFlux);
+	else {
+		blockingCounter = blockForNFrames;
+		thresholdedFluxes.push_back(spectralFlux);
+	}
 
 	// Check if the last 5 spectral fluxes indicate a peak at the previous flux
 	auto tfSize = thresholdedFluxes.size();

@@ -13,6 +13,7 @@
 #include "CustomLookAndFeel.h"
 #include "widgets/CustomDial.h"
 #include "widgets/PedalWidget.h"
+#include "widgets/SplashScreen.h"
 
 //==============================================================================
 /**
@@ -40,6 +41,8 @@ private:
     AudioProcessorValueTreeState& vts;
 
     CustomLookAndFeel lf;
+
+    DonateSplashScreen* ss;
 
     Label infoLabel;
 
