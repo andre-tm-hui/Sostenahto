@@ -16,10 +16,11 @@ SustainPedalAudioProcessor::SustainPedalAudioProcessor() :
             std::make_unique<AudioParameterFloat> ("dry", "Dry", 0.f, 100.f, 100.f),
             std::make_unique<AudioParameterFloat>("rise", "Rise", 0.f, 5.f, 0.5f),
             std::make_unique<AudioParameterFloat>("tail", "Tail", 0.f, 5.f, 1.f),
-            std::make_unique<AudioParameterFloat>("period", "Period", 0.f, 3.f, 1.f),
+            std::make_unique<AudioParameterFloat>("period", "Period", 0.01f, 1.5f, 0.5f),
             std::make_unique<AudioParameterInt>("maxLayers", "Max Layers", 1, 10, 1),
             std::make_unique<AudioParameterBool>("holdToggle", "Hold to sustain", true),
-            std::make_unique<AudioParameterInt>("keycode", "Keycode", -1, INT_MAX, -1)
+            std::make_unique<AudioParameterInt>("keycode", "Keycode", -1, INT_MAX, -1),
+            std::make_unique<AudioParameterBool>("forcePeriod", "Force Period", true)
         })
 #ifndef JucePlugin_PreferredChannelConfigurations
     , AudioProcessor(BusesProperties()
@@ -40,6 +41,7 @@ SustainPedalAudioProcessor::SustainPedalAudioProcessor() :
     maxLayers = parameters.getRawParameterValue("maxLayers");
     holdToggle = parameters.getRawParameterValue("holdToggle");
     keycode = parameters.getRawParameterValue("keycode");
+    forcePeriod = parameters.getRawParameterValue("forcePeriod");
 }
 
 SustainPedalAudioProcessor::~SustainPedalAudioProcessor()
@@ -96,16 +98,16 @@ int SustainPedalAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void SustainPedalAudioProcessor::setCurrentProgram (int index)
+void SustainPedalAudioProcessor::setCurrentProgram (int)
 {
 }
 
-const String SustainPedalAudioProcessor::getProgramName (int index)
+const String SustainPedalAudioProcessor::getProgramName (int)
 {
     return {};
 }
 
-void SustainPedalAudioProcessor::changeProgramName (int index, const String& newName)
+void SustainPedalAudioProcessor::changeProgramName (int, const String&)
 {
 }
 
@@ -114,8 +116,8 @@ void SustainPedalAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    this->sampleRate = sampleRate;
-    td = new TransientDetector(sampleRate, samplesPerBlock);
+    sr = (int)sampleRate;
+    td = new TransientDetector(sr, samplesPerBlock);
 }
 
 void SustainPedalAudioProcessor::releaseResources()
@@ -150,7 +152,7 @@ bool SustainPedalAudioProcessor::isBusesLayoutSupported (const BusesLayout& layo
 }
 #endif
 
-void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&)
 {
     if (!ready) return;
 
@@ -165,20 +167,20 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     auto* channelData = buffer.getWritePointer(0);
     td->process(std::vector<float>(channelData, channelData + nSamples), tailSignal);
     // Record the tail of a transient
-    if (tailSignal.size() < sampleRate * 5) {
+    if (tailSignal.size() < sr * 5) {
         tailSignal.resize(tailSignal.size() + nSamples);
         memcpy(&tailSignal[tailSignal.size() - nSamples], channelData, sizeof(float) * nSamples);
     }
 
-    float dryDecimal = *dry / 100.0;
+    float dryDecimal = *dry / 100.f;
     for (int i = 0; i < nSamples; i++) {
         channelData[i] *= dryDecimal;
     }
 
-    float wetDecimal = *wet / 100.0;
+    float wetDecimal = *wet / 100.f;
     // If the pedal is triggered
     for (int i = 0; i < layers.size();) {
-        auto sustain = layers[i]->getSample(nSamples, wetDecimal, sampleRate);
+        auto sustain = layers[i]->getSample(nSamples, wetDecimal, sr);
         if (sustain.empty()) {
             delete layers[i];
             layers.erase(layers.begin() + i);
@@ -190,7 +192,7 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     }
 
     for (int i = 0; i < fadingOut.size();) {
-        auto sustain = fadingOut[i]->getSample(nSamples, wetDecimal, sampleRate);
+        auto sustain = fadingOut[i]->getSample(nSamples, wetDecimal, sr);
         if (sustain.empty()) {
             delete fadingOut[i];
             fadingOut.erase(fadingOut.begin() + i);
@@ -256,7 +258,7 @@ void SustainPedalAudioProcessor::setPedal(bool val) {
         for (auto layer : layers) {
             layer->fade(true);
         }
-        sample = SamplingUtil::getSample(tailSignal, sampleRate * *period, 2.0);
+        sample = SamplingUtil::getSample(tailSignal, int(sr * *period), *forcePeriod > 0.5f, (size_t)sr);
         layers.emplace_back(new SustainData(sample, *rise, *tail));
     }
     else {

@@ -9,9 +9,9 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "TransientDetector.h"
-#include "SustainData.h"
-#include "SamplingUtil.h"
+#include "util/dsp/TransientDetector.h"
+#include "util/dsp/SamplingUtil.h"
+#include "util/SustainData.h"
 #include "util/LicenseManager.h"
 
 //==============================================================================
@@ -68,8 +68,8 @@ public:
     //==============================================================================
     void setPedal(bool val);
 
-    void setMaxLayers(int val) { *maxLayers = val; }
-    int getMaxLayers() { return *maxLayers; }
+    void setMaxLayers(int val) { *maxLayers = (float)val; }
+    int getMaxLayers() { return (int)*maxLayers; }
 
     void setRise(float val) { *rise = val; }
     float getRise() { return *rise; }
@@ -89,8 +89,11 @@ public:
     void setHoldToSustain(bool val) { *holdToggle = val; }
     bool getHoldToSustain() { return *holdToggle > 0.5f; }
 
-    void setKeycode(int val) { *keycode = val; }
-    int getKeycode() { return *keycode; }
+    void setKeycode(int val) { *keycode = (float)val; }
+    int getKeycode() { return (int)*keycode; }
+
+    void setForcePeriod(bool val) { *forcePeriod = val; }
+    bool getForcePeriod() { return *forcePeriod > 0.5f; }
 
     void setLicenseKey(std::string val) { licenseKey = val; LicenseManager::saveLicense(licenseKey); }
     std::string getLicenseKey() { return licenseKey; }
@@ -114,7 +117,7 @@ private:
         gettingPhrase = false,
         phraseFound = false;
 
-    int sampleRate;
+    int sr;
 
     std::atomic<float>* rise,
         * tail,
@@ -123,7 +126,8 @@ private:
         * period,
         * maxLayers,
         * holdToggle,
-        * keycode;
+        * keycode,
+        * forcePeriod;
 
     std::string licenseKey = "";
 

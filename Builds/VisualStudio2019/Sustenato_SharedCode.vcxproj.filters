@@ -2,14 +2,26 @@
 
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Sustenato\Source\Util">
-      <UniqueIdentifier>{B1F00D12-4F31-6372-E068-E6D5FB5A086D}</UniqueIdentifier>
+    <Filter Include="Sustenato\pffft\simd">
+      <UniqueIdentifier>{F5EA4953-4A8A-94A7-9213-E1DD8BBFCF45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sustenato\Source\Widgets">
-      <UniqueIdentifier>{F3C77126-12ED-1CA1-0D52-4A26B4DB3B50}</UniqueIdentifier>
+    <Filter Include="Sustenato\pffft">
+      <UniqueIdentifier>{B09BE94B-5B9E-40D9-C4F0-BC0035A03F66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sustenato\Source">
-      <UniqueIdentifier>{DDC43C60-4B8A-F510-E250-9DF04499DCE7}</UniqueIdentifier>
+    <Filter Include="Sustenato\source\util\dsp">
+      <UniqueIdentifier>{F08FDD32-A4F4-1270-3A87-A8DBAC8E464E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sustenato\source\util">
+      <UniqueIdentifier>{73211ED2-6227-3266-1D11-B9CD3D5001A1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sustenato\source\widgets">
+      <UniqueIdentifier>{68DAEADA-6C72-2C7D-4F77-B7DFBBDD24AD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sustenato\source">
+      <UniqueIdentifier>{D64C4F30-832A-1EB5-348C-421E86277782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sustenato\rc">
+      <UniqueIdentifier>{14620D7E-D7DE-691C-F562-EE2E4890A5B1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sustenato">
       <UniqueIdentifier>{365AEDB8-38BE-E848-1C3F-E7FFD4B8C654}</UniqueIdentifier>
@@ -616,29 +628,35 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\pffft\pffft.c">
+      <Filter>Sustenato\pffft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\pffft\pffft_common.c">
+      <Filter>Sustenato\pffft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\pffft\pffft_double.c">
+      <Filter>Sustenato\pffft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\util\dsp\SamplingUtil.cpp">
+      <Filter>Sustenato\source\util\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\util\dsp\TransientDetector.cpp">
+      <Filter>Sustenato\source\util\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\util\SustainData.cpp">
+      <Filter>Sustenato\source\util</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\util\DeviceIDGetter.cpp">
-      <Filter>Sustenato\Source\Util</Filter>
+      <Filter>Sustenato\source\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\util\LicenseManager.cpp">
-      <Filter>Sustenato\Source\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\CustomLookAndFeel.cpp">
-      <Filter>Sustenato\Source</Filter>
+      <Filter>Sustenato\source\util</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp">
-      <Filter>Sustenato\Source</Filter>
+      <Filter>Sustenato\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\PluginEditor.cpp">
-      <Filter>Sustenato\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\SustainData.cpp">
-      <Filter>Sustenato\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\TransientDetector.cpp">
-      <Filter>Sustenato\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\SamplingUtil.cpp">
-      <Filter>Sustenato\Source</Filter>
+      <Filter>Sustenato\source</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.cpp">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>
@@ -3108,44 +3126,89 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_avx_double.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_double.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_float.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_neon_double.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_neon_double_from_avx.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_neon_float.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_scalar_double.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_scalar_float.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_sse1_float.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_sse2_double.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\simd\pf_altivec_float.h">
+      <Filter>Sustenato\pffft\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\pffft.h">
+      <Filter>Sustenato\pffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\pffft.hpp">
+      <Filter>Sustenato\pffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\pffft_double.h">
+      <Filter>Sustenato\pffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\pffft\pffft_priv_impl.h">
+      <Filter>Sustenato\pffft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\util\dsp\SamplingUtil.h">
+      <Filter>Sustenato\source\util\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\util\dsp\TransientDetector.h">
+      <Filter>Sustenato\source\util\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\util\SustainData.h">
+      <Filter>Sustenato\source\util</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\util\DeviceIDGetter.h">
-      <Filter>Sustenato\Source\Util</Filter>
+      <Filter>Sustenato\source\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\util\LicenseManager.h">
-      <Filter>Sustenato\Source\Util</Filter>
+      <Filter>Sustenato\source\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\util\Salt.h">
-      <Filter>Sustenato\Source\Util</Filter>
+      <Filter>Sustenato\source\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\widgets\CustomDial.h">
-      <Filter>Sustenato\Source\Widgets</Filter>
+      <Filter>Sustenato\source\widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\widgets\CustomLookAndFeel.h">
+      <Filter>Sustenato\source\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\widgets\MousePassthrough.h">
-      <Filter>Sustenato\Source\Widgets</Filter>
+      <Filter>Sustenato\source\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\widgets\PedalWidget.h">
-      <Filter>Sustenato\Source\Widgets</Filter>
+      <Filter>Sustenato\source\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\widgets\SplashScreen.h">
-      <Filter>Sustenato\Source\Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\CustomLookAndFeel.h">
-      <Filter>Sustenato\Source</Filter>
+      <Filter>Sustenato\source\widgets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
-      <Filter>Sustenato\Source</Filter>
+      <Filter>Sustenato\source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\PluginEditor.h">
-      <Filter>Sustenato\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\SamplingUtil.h">
-      <Filter>Sustenato\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\SustainData.h">
-      <Filter>Sustenato\Source</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Source\TransientDetector.h">
-      <Filter>Sustenato\Source</Filter>
+      <Filter>Sustenato\source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_audio_basics\audio_play_head\juce_AudioPlayHead.h">
       <Filter>JUCE Modules\juce_audio_basics\audio_play_head</Filter>
@@ -6011,23 +6074,23 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\donateButton.png">
-      <Filter>Sustenato</Filter>
+    <None Include="..\..\rc\donateButton.png">
+      <Filter>Sustenato\rc</Filter>
     </None>
-    <None Include="..\..\donatedAlreadyButton.png">
-      <Filter>Sustenato</Filter>
+    <None Include="..\..\rc\donatedAlreadyButton.png">
+      <Filter>Sustenato\rc</Filter>
     </None>
-    <None Include="..\..\pedalDown.png">
-      <Filter>Sustenato</Filter>
+    <None Include="..\..\rc\pedalDown.png">
+      <Filter>Sustenato\rc</Filter>
     </None>
-    <None Include="..\..\pedalUp.png">
-      <Filter>Sustenato</Filter>
+    <None Include="..\..\rc\pedalUp.png">
+      <Filter>Sustenato\rc</Filter>
     </None>
-    <None Include="..\..\skipButton.png">
-      <Filter>Sustenato</Filter>
+    <None Include="..\..\rc\skipButton.png">
+      <Filter>Sustenato\rc</Filter>
     </None>
-    <None Include="..\..\splashScreen.png">
-      <Filter>Sustenato</Filter>
+    <None Include="..\..\rc\splashScreen.png">
+      <Filter>Sustenato\rc</Filter>
     </None>
     <None Include="..\..\..\..\C++ Libraries\JUCE\modules\juce_audio_devices\native\oboe\CMakeLists.txt">
       <Filter>JUCE Modules\juce_audio_devices\native\oboe</Filter>

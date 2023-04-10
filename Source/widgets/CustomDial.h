@@ -11,11 +11,12 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../widgets/MousePassthrough.h"
+#include "MousePassthrough.h"
 
 //==============================================================================
-/*
-*/
+
+typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
 
 class CustomLabel : public juce::Label, public MousePassthrough {
 public:
@@ -35,19 +36,18 @@ class CustomDial  : public juce::Slider
 {
 public:
     CustomDial(
-        double inc, 
         std::string labelText, 
         Label& infoBox, 
         std::string infoText = "", 
         std::string suffix = "", 
-        double width = 80, 
-        double height = 120
+        int width = 80, 
+        int height = 120
     ) : label(*this), 
         infoBox(infoBox), 
         infoText(infoText) {
         setSize(width, width);
         setTextValueSuffix(suffix);
-        setTextBoxStyle(Slider::TextBoxBelow, false, 0.75 * width, (height - width) / 2.0);
+        setTextBoxStyle(Slider::TextBoxBelow, false, int(0.75 * width), int((height - width) / 2.0));
         setSliderStyle(Slider::SliderStyle::Rotary);
         addAndMakeVisible(label);
         label.setText(labelText, dontSendNotification);
@@ -59,7 +59,7 @@ public:
 
     ~CustomDial() override {}
 
-    void mouseEnter(const MouseEvent& ev) override {
+    void mouseEnter(const MouseEvent&) override {
         infoBox.setText(infoText, dontSendNotification);
         getParentComponent()->repaint();
     };
@@ -74,26 +74,56 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CustomDial)
 };
 
-class CustomToggleButton : public ToggleButton, public MousePassthrough {
+class CustomToggleButton : public ToggleButton {
 public:
-    CustomToggleButton(Component& parent) : ToggleButton(), MousePassthrough(parent) {}
-
-    void mouseEnter(const MouseEvent& ev) override {
-        parent.mouseEnter(ev);
+    CustomToggleButton(
+        std::string labelText,
+        Label& infoBox,
+        std::string infoText = "",
+        int width = 160,
+        int height = 24
+    ) : ToggleButton(labelText),
+        infoBox(infoBox),
+        infoText(infoText) {
+        setSize(width, height);
+        setComponentID(labelText);
     }
 
+    ~CustomToggleButton() override {}
+
+    void mouseEnter(const MouseEvent&) override {
+        infoBox.setText(infoText, dontSendNotification);
+        getParentComponent()->repaint();
+    };
+
 private:
+    Label& infoBox;
+
+    std::string infoText;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CustomToggleButton)
 };
 
-class CustomTextButton : public TextButton, public MousePassthrough {
+class PedalToggleButton : public ToggleButton, public MousePassthrough {
 public:
-    CustomTextButton(Component& parent) : TextButton(), MousePassthrough(parent) {}
+    PedalToggleButton(Component& parent) : ToggleButton(), MousePassthrough(parent) {}
 
     void mouseEnter(const MouseEvent& ev) override {
         parent.mouseEnter(ev);
     }
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CustomTextButton)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PedalToggleButton)
+};
+
+class PedalTextButton : public TextButton, public MousePassthrough {
+public:
+    PedalTextButton(Component& parent) : TextButton(), MousePassthrough(parent) {}
+
+    void mouseEnter(const MouseEvent& ev) override {
+        parent.mouseEnter(ev);
+    }
+
+private:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PedalTextButton)
 };

@@ -10,16 +10,13 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "CustomLookAndFeel.h"
+#include "widgets/CustomLookAndFeel.h"
 #include "widgets/CustomDial.h"
 #include "widgets/PedalWidget.h"
 #include "widgets/SplashScreen.h"
 
 //==============================================================================
-/**
-*/
 
-typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
 
 class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public Timer, public KeyListener
 {
@@ -36,8 +33,6 @@ public:
     bool keyStateChanged(bool isKeyDown, Component*) override;
 
 private:
-    void plot(Graphics& g, std::vector<float> data, int x, int y, int width, int height, double yScale, bool middle = true);
-
     AudioProcessorValueTreeState& vts;
 
     CustomLookAndFeel lf;
@@ -53,12 +48,17 @@ private:
         *dryDial,
         *periodDial;
 
+    CustomToggleButton* forcePeriodToggle;
+
     std::unique_ptr<SliderAttachment> maxLayersAttachment,
         riseAttachment,
         tailAttachment,
         wetAttachment,
         dryAttachment,
         periodAttachment;
+
+    std::unique_ptr<ButtonAttachment> holdAttachment,
+        forcePeriodAttachment;
 
     PedalWidget* pedalWidget;
 

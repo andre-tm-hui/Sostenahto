@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "../util/DeviceIDGetter.h"
+#include "util/DeviceIDGetter.h"
 
 //==============================================================================
 /*

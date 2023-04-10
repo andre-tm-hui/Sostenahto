@@ -8,7 +8,7 @@ public:
 	SustainData(std::vector<float> buffer, std::atomic<float>& rise, std::atomic<float>& tail);
 	~SustainData();
 
-	std::vector<float> getSample(int nSamples, float wet, int samplingRate);
+	std::vector<float> getSample(int nSamples, float wet, int samplingRate);	
 
 	void fade(bool in) { fadeIn = in; }
 

@@ -5,10 +5,51 @@
               splashScreenColour="Dark" pluginFormats="buildAU,buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginVST3Category="Fx,Sampler"
               pluginDesc="Sustenato for stringed instruments" pluginManufacturer="Andre"
-              companyWebsite="andre-tm-hui.github.io" headerPath="E:\C++ Libraries\asiosdk_2.3.3_2019-06-14\common&#10;E:\C++ Libraries\openssl-3.1.0\include">
+              companyWebsite="andre-tm-hui.github.io" headerPath="E:\C++ Libraries\asiosdk_2.3.3_2019-06-14\common"
+              defines="PFFFT_ENABLE_DOUBLE&#10;PFFFT_ENABLE_FLOAT">
   <MAINGROUP id="vrJnIo" name="Sustenato">
-    <GROUP id="{E218D6CA-93C3-F37B-AC8F-45001CACCC66}" name="Source">
-      <GROUP id="{2DEDD399-F219-91E8-3C8E-634467F6BB6A}" name="Util">
+    <GROUP id="{F8DC6BE5-4EAF-E014-6738-F4AC9C6B4D20}" name="pffft">
+      <GROUP id="{86632CC3-8157-DB36-DB50-086AB7B297CF}" name="simd">
+        <FILE id="uwbpoG" name="pf_avx_double.h" compile="0" resource="0" file="Source/pffft/simd/pf_avx_double.h"/>
+        <FILE id="fgavAD" name="pf_double.h" compile="0" resource="0" file="Source/pffft/simd/pf_double.h"/>
+        <FILE id="Tz9vgV" name="pf_float.h" compile="0" resource="0" file="Source/pffft/simd/pf_float.h"/>
+        <FILE id="Y47ahO" name="pf_neon_double.h" compile="0" resource="0"
+              file="Source/pffft/simd/pf_neon_double.h"/>
+        <FILE id="nrSGFu" name="pf_neon_double_from_avx.h" compile="0" resource="0"
+              file="Source/pffft/simd/pf_neon_double_from_avx.h"/>
+        <FILE id="ygttmm" name="pf_neon_float.h" compile="0" resource="0" file="Source/pffft/simd/pf_neon_float.h"/>
+        <FILE id="jz7FnI" name="pf_scalar_double.h" compile="0" resource="0"
+              file="Source/pffft/simd/pf_scalar_double.h"/>
+        <FILE id="xs0SYa" name="pf_scalar_float.h" compile="0" resource="0"
+              file="Source/pffft/simd/pf_scalar_float.h"/>
+        <FILE id="kDZgsD" name="pf_sse1_float.h" compile="0" resource="0" file="Source/pffft/simd/pf_sse1_float.h"/>
+        <FILE id="MsNIv5" name="pf_sse2_double.h" compile="0" resource="0"
+              file="Source/pffft/simd/pf_sse2_double.h"/>
+        <FILE id="mn22Em" name="pf_altivec_float.h" compile="0" resource="0"
+              file="Source/pffft/simd/pf_altivec_float.h"/>
+      </GROUP>
+      <FILE id="ROQ42i" name="pffft.c" compile="1" resource="0" file="Source/pffft/pffft.c"/>
+      <FILE id="HKKkqP" name="pffft.h" compile="0" resource="0" file="Source/pffft/pffft.h"/>
+      <FILE id="hgK0Vb" name="pffft.hpp" compile="0" resource="0" file="Source/pffft/pffft.hpp"/>
+      <FILE id="Snw1Pj" name="pffft_common.c" compile="1" resource="0" file="Source/pffft/pffft_common.c"/>
+      <FILE id="IJ8jlc" name="pffft_double.c" compile="1" resource="0" file="Source/pffft/pffft_double.c"/>
+      <FILE id="fyol4C" name="pffft_double.h" compile="0" resource="0" file="Source/pffft/pffft_double.h"/>
+      <FILE id="n3TyvG" name="pffft_priv_impl.h" compile="0" resource="0"
+            file="Source/pffft/pffft_priv_impl.h"/>
+    </GROUP>
+    <GROUP id="{E218D6CA-93C3-F37B-AC8F-45001CACCC66}" name="source">
+      <GROUP id="{2DEDD399-F219-91E8-3C8E-634467F6BB6A}" name="util">
+        <GROUP id="{DC9943DE-A380-C12A-C9FB-8EF68F49782C}" name="dsp">
+          <FILE id="By9Jib" name="SamplingUtil.cpp" compile="1" resource="0"
+                file="Source/util/dsp/SamplingUtil.cpp"/>
+          <FILE id="AvQbPx" name="SamplingUtil.h" compile="0" resource="0" file="Source/util/dsp/SamplingUtil.h"/>
+          <FILE id="Gx6eMf" name="TransientDetector.cpp" compile="1" resource="0"
+                file="Source/util/dsp/TransientDetector.cpp"/>
+          <FILE id="Cgl4Ov" name="TransientDetector.h" compile="0" resource="0"
+                file="Source/util/dsp/TransientDetector.h"/>
+        </GROUP>
+        <FILE id="Nk725Z" name="SustainData.cpp" compile="1" resource="0" file="Source/util/SustainData.cpp"/>
+        <FILE id="yxScWc" name="SustainData.h" compile="0" resource="0" file="Source/util/SustainData.h"/>
         <FILE id="uENdYW" name="DeviceIDGetter.cpp" compile="1" resource="0"
               file="Source/util/DeviceIDGetter.cpp"/>
         <FILE id="yB0PY3" name="DeviceIDGetter.h" compile="0" resource="0"
@@ -19,17 +60,15 @@
               file="Source/util/LicenseManager.h"/>
         <FILE id="pPgAFx" name="Salt.h" compile="0" resource="0" file="Source/util/Salt.h"/>
       </GROUP>
-      <GROUP id="{6DFFD775-EC67-68C4-E2DA-D42E64C5EDC3}" name="Widgets">
+      <GROUP id="{6DFFD775-EC67-68C4-E2DA-D42E64C5EDC3}" name="widgets">
         <FILE id="Y0NJHd" name="CustomDial.h" compile="0" resource="0" file="Source/widgets/CustomDial.h"/>
+        <FILE id="WymBNV" name="CustomLookAndFeel.h" compile="0" resource="0"
+              file="Source/widgets/CustomLookAndFeel.h"/>
         <FILE id="Div9YW" name="MousePassthrough.h" compile="0" resource="0"
               file="Source/widgets/MousePassthrough.h"/>
         <FILE id="Cq0CKQ" name="PedalWidget.h" compile="0" resource="0" file="Source/widgets/PedalWidget.h"/>
         <FILE id="uuHXCz" name="SplashScreen.h" compile="0" resource="0" file="Source/widgets/SplashScreen.h"/>
       </GROUP>
-      <FILE id="fsPjmZ" name="CustomLookAndFeel.cpp" compile="1" resource="0"
-            file="Source/CustomLookAndFeel.cpp"/>
-      <FILE id="lssLVN" name="CustomLookAndFeel.h" compile="0" resource="0"
-            file="Source/CustomLookAndFeel.h"/>
       <FILE id="DbqYar" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="KZzb3T" name="PluginProcessor.h" compile="0" resource="0"
@@ -37,25 +76,18 @@
       <FILE id="u8MfV6" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="ayeYQl" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="Pczjj3" name="SamplingUtil.h" compile="0" resource="0" file="Source/SamplingUtil.h"/>
-      <FILE id="VMpBsU" name="SustainData.cpp" compile="1" resource="0" file="Source/SustainData.cpp"/>
-      <FILE id="Za92BF" name="SustainData.h" compile="0" resource="0" file="Source/SustainData.h"/>
-      <FILE id="ISNLSS" name="TransientDetector.cpp" compile="1" resource="0"
-            file="Source/TransientDetector.cpp"/>
-      <FILE id="ZL37K6" name="TransientDetector.h" compile="0" resource="0"
-            file="Source/TransientDetector.h"/>
-      <FILE id="aCuKd1" name="SamplingUtil.cpp" compile="1" resource="0"
-            file="Source/SamplingUtil.cpp"/>
     </GROUP>
-    <FILE id="ZHsV0S" name="donateButton.png" compile="0" resource="1"
-          file="donateButton.png"/>
-    <FILE id="z8nx4P" name="donatedAlreadyButton.png" compile="0" resource="1"
-          file="donatedAlreadyButton.png"/>
-    <FILE id="Z7XIaG" name="pedalDown.png" compile="0" resource="1" file="pedalDown.png"/>
-    <FILE id="m0eBIn" name="pedalUp.png" compile="0" resource="1" file="pedalUp.png"/>
-    <FILE id="BILxkW" name="skipButton.png" compile="0" resource="1" file="skipButton.png"/>
-    <FILE id="LaRdXO" name="splashScreen.png" compile="0" resource="1"
-          file="splashScreen.png"/>
+    <GROUP id="{B5C2D807-4C97-D9ED-A713-33C926B7CE73}" name="rc">
+      <FILE id="TixbfN" name="donateButton.png" compile="0" resource="1"
+            file="rc/donateButton.png"/>
+      <FILE id="kq9jnO" name="donatedAlreadyButton.png" compile="0" resource="1"
+            file="rc/donatedAlreadyButton.png"/>
+      <FILE id="IqAFyy" name="pedalDown.png" compile="0" resource="1" file="rc/pedalDown.png"/>
+      <FILE id="vFULCv" name="pedalUp.png" compile="0" resource="1" file="rc/pedalUp.png"/>
+      <FILE id="RP8aOU" name="skipButton.png" compile="0" resource="1" file="rc/skipButton.png"/>
+      <FILE id="agzx3F" name="splashScreen.png" compile="0" resource="1"
+            file="rc/splashScreen.png"/>
+    </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"
                JUCE_ASIO="1"/>
