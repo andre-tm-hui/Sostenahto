@@ -2,10 +2,10 @@
 
 std::vector<float> SamplingUtil::getSample(std::vector<float> buffer, int targetSampleLength, bool forcePeriod, size_t sampleRate) {
 	targetSampleLength *= 2; // accounts for 50% overlap in crossfadeSelf
-	if (forcePeriod && buffer.size() < targetSampleLength && targetSampleLength / buffer.size() < 10 && buffer.size() > 8192) {
+	if (forcePeriod && buffer.size() < targetSampleLength && buffer.size() > 4096) {
 		// we use a 8192-length window/FFT size for time scaling, as it provides the best balance of quality and performance
 		// TODO: investigate quality of this window length for other music-production sample rates - only tested on 48000 currently
-		buffer = timeScale(buffer, targetSampleLength * 2, sampleRate, 8192);
+		buffer = timeScale(buffer, targetSampleLength, sampleRate, 4096);
 		buffer = crossfadeSelf(buffer);
 		//buffer = dynamicRangeCompression(buffer, 4096);
 	}
