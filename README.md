@@ -1,5 +1,5 @@
 # SustainPedal
-A VST Plugin that provides infinite piano-like sustain, using transient detection, autocorrelation and more.
+A VST Plugin that provides infinite piano-like sustain, using transient detection, autocorrelation, a phase vocoder and more.
 
 ## Features:
 - Infinite sustain - let your notes and chords ring out for as long as you like.
