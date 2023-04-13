@@ -8,6 +8,8 @@ A VST Plugin that provides infinite piano-like sustain, using transient detectio
 - Layering - select however many layers you want to stack sustained notes and chords.
 - Compatible with any Keyboard-emulating foot-switch/pedal - control the sustain with your feet, as you would an FX pedal.
 - ***INCONSISTENT*** Works with trills and vibrato
+- Force Period - Uses a phase vocoder to stretch recorded samples to the set period. Wait less time before pressing the pedal.
+  - Not compatible with trills and vibrato
 
 ### Recommended Usage:
 - Best used as a live tool, whether for a live performance or recording
@@ -23,3 +25,9 @@ A VST Plugin that provides infinite piano-like sustain, using transient detectio
   - If you press it too quickly after playing, the sustained sound may not be clear/smooth. This can be used intentionally to create different effects, or can be reset quickly by re-triggering the keybind, given no new notes are played.
 
 Designed for use with Electric Guitars and Amp Sims.
+
+## Compatibility:
+### Working:
+- Cantabile 4
+### Not Working:
+- Waveform DAW - plugin not verified
