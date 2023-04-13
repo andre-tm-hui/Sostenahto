@@ -3,5 +3,5 @@ Builds/VisualStudio2019/.vs
 Builds/VisualStudio2019/enc_temp_folder
 Source/util/Salt.h
 Source/pffft
-JuceLibraryCode/*
-Builds/*
+JuceLibraryCode
+Builds
