@@ -27,6 +27,7 @@ A VST Plugin that provides infinite piano-like sustain, using transient detectio
 Designed for use with Electric Guitars and Amp Sims.
 
 ## Compatibility:
+Works with Windows. Not tested, but it should work on Linux/Mac as well.
 ### Working:
 - Cantabile 4
 ### Not Working:
