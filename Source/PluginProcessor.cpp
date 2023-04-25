@@ -180,6 +180,10 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     float wetDecimal = *wet / 100.f;
     // If the pedal is triggered
     for (int i = 0; i < layers.size();) {
+        if (layers[i] == nullptr) {
+            layers.erase(layers.begin() + i);
+            continue;
+        }
         auto sustain = layers[i]->getSample(nSamples, wetDecimal, sr);
         if (sustain.empty()) {
             delete layers[i];
@@ -192,6 +196,10 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     }
 
     for (int i = 0; i < fadingOut.size();) {
+        if (fadingOut[i] == nullptr) {
+            fadingOut.erase(fadingOut.begin() + i);
+            continue;
+        }
         auto sustain = fadingOut[i]->getSample(nSamples, wetDecimal, sr);
         if (sustain.empty()) {
             delete fadingOut[i];
@@ -254,16 +262,26 @@ void SustainPedalAudioProcessor::setPedal(bool val) {
             layers[0]->fade(false);
             fadingOut.push_back(layers[0]);
             layers.erase(layers.begin());
-;        }
-        for (auto layer : layers) {
-            layer->fade(true);
+        }
+        for (int i = 0; i < layers.size();) {
+            if (layers[i] == nullptr) {
+                layers.erase(layers.begin() + i);
+                continue;
+            }
+            layers[i]->fade(true);
+            i++;
         }
         sample = SamplingUtil::getSample(tailSignal, int(sr * *period), *forcePeriod > 0.5f, (size_t)sr);
-        layers.emplace_back(new SustainData(sample, *rise, *tail));
+        layers.emplace_back(new SustainData(sample, rise, tail));
     }
     else {
-        for (auto layer : layers) {
-            layer->fade(false);
+        for (int i = 0; i < layers.size();) {
+            if (layers[i] == nullptr) {
+                layers.erase(layers.begin() + i);
+                continue;
+            }
+            layers[i]->fade(false);
+            i++;
         }
     }
 }

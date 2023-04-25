@@ -43,6 +43,10 @@
           <FILE id="By9Jib" name="SamplingUtil.cpp" compile="1" resource="0"
                 file="Source/util/dsp/SamplingUtil.cpp"/>
           <FILE id="AvQbPx" name="SamplingUtil.h" compile="0" resource="0" file="Source/util/dsp/SamplingUtil.h"/>
+          <FILE id="IaLg4Y" name="TransientDetect.cpp" compile="1" resource="0"
+                file="source/util/dsp/TransientDetect.cpp"/>
+          <FILE id="AKtVJ9" name="TransientDetect.h" compile="0" resource="0"
+                file="source/util/dsp/TransientDetect.h"/>
           <FILE id="Gx6eMf" name="TransientDetector.cpp" compile="1" resource="0"
                 file="Source/util/dsp/TransientDetector.cpp"/>
           <FILE id="Cgl4Ov" name="TransientDetector.h" compile="0" resource="0"

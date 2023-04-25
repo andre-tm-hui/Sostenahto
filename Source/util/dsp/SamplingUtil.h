@@ -17,7 +17,7 @@ namespace SamplingUtil
 
 	std::vector<float> autocorrelate(std::vector<float> buffer);
 
-	std::vector<float> crossfadeSelf(std::vector<float> buffer);
+	void crossfadeSelf(std::vector<float>& buffer);
 
 	std::vector<float> dynamicRangeCompression(std::vector<float> buffer, int windowSize, double overlap = 2.0);
 

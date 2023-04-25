@@ -9,7 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "util/dsp/TransientDetector.h"
+#include "util/dsp/TransientDetect.h"
 #include "util/dsp/SamplingUtil.h"
 #include "util/SustainData.h"
 #include "util/LicenseManager.h"
@@ -63,7 +63,9 @@ public:
     //==============================================================================
     std::vector<float> getLatestSample() { return sample; }
     std::vector<float> getLatestRecording() { return tailSignal; }
-    std::vector<float> getTransients() { return td->getSpectralFluxes(); }
+#if JUCE_DEBUG
+    std::vector<float> getTransients() { return td->getFrameFlags(); }
+#endif
 
     //==============================================================================
     void setPedal(bool val);
@@ -101,6 +103,12 @@ public:
     //==============================================================================
     void start() { ready = true; }
     bool isReady() { return ready; }
+    bool canRun() { return tailSignal.size() >= 4096; }
+
+    //==============================================================================
+#if JUCE_DEBUG
+    std::vector<float> getSpectralFluxes() { return td->getFrameFlags(); }
+#endif
 
 private:
     AudioProcessorValueTreeState parameters;

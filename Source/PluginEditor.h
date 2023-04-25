@@ -18,7 +18,7 @@
 //==============================================================================
 
 
-class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public Timer, public KeyListener
+class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public KeyListener, public Timer
 {
 public:
     SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor&, AudioProcessorValueTreeState&);
@@ -27,12 +27,14 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void timerCallback() override;
+    void timerCallback() override { repaint(); }
 
     bool keyPressed(const KeyPress& key, Component* originatingComponent) override;
     bool keyStateChanged(bool isKeyDown, Component*) override;
 
 private:
+    void plot(Graphics& g, std::vector<float> data, int x, int y, int width, int height, double yScale, bool middle = true);
+
     AudioProcessorValueTreeState& vts;
 
     CustomLookAndFeel lf;

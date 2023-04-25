@@ -6,10 +6,13 @@ std::vector<float> SamplingUtil::getSample(std::vector<float> buffer, int target
 		// we use a 8192-length window/FFT size for time scaling, as it provides the best balance of quality and performance
 		// TODO: investigate quality of this window length for other music-production sample rates - only tested on 48000 currently
 		buffer = timeScale(buffer, targetSampleLength, sampleRate, 4096);
-		buffer = crossfadeSelf(buffer);
+		crossfadeSelf(buffer);
 		//buffer = dynamicRangeCompression(buffer, 4096);
 	}
 	else {
+		if (buffer.size() < 4096) {
+			DBG("small buffer");
+		}
 		// if the buffer is longer than the target, cap the target length there. Otherwise, make it some fraction of the buffer size, 
 		// less than 0.5 since autocorrelation is symmetrical
 		int adjustedTarget = std::min((double)targetSampleLength, (double)buffer.size());
@@ -19,7 +22,7 @@ std::vector<float> SamplingUtil::getSample(std::vector<float> buffer, int target
 		// autocorrelation input is padded to be compatible with FFT libraries (2^n), 
 		// hence output can show longer intervals than the original input signal length
 		// we should try to get the longest possible interval from the orignal sample as possible
-		buffer = crossfadeSelf(buffer);
+		crossfadeSelf(buffer);
 		//buffer = dynamicRangeCompression(buffer, acd.period * 2);
 	}
 	
@@ -82,20 +85,25 @@ std::vector<float> SamplingUtil::autocorrelate(std::vector<float> buffer) {
 	return buffer;
 }
 
-std::vector<float> SamplingUtil::crossfadeSelf(std::vector<float> buffer) {
+void SamplingUtil::crossfadeSelf(std::vector<float>& buffer) {
+	if (buffer.size() < 1000) {
+		DBG("fail");
+	}
 	size_t windowSize = buffer.size();
 	// default 50% overlap
 	size_t overlapSize = windowSize / 2;
 	std::vector<float> window(windowSize, 0.f);
 	dsp::WindowingFunction<float>::fillWindowingTables(&window[0], windowSize + 1, dsp::WindowingFunction<float>::WindowingMethod::triangular, true);
 
-	std::vector<float> out(windowSize, 0.f);
+	std::vector<float> out((int)std::max((float)buffer.size(), (float)2048), 0.f);
 	for (int i = 0, j = windowSize / 2; i < windowSize; i++, j++) {
 		j %= windowSize;
-		out[i] = buffer[i] * window[i] + buffer[j] * window[j];
+		out[i] = (buffer[i] * window[i] + buffer[j] * window[j]);
 	}
 
-	return out;
+	for (int i = 0; i < windowSize; i++) {
+		buffer[i] = out[i];
+	}
 }
 
 std::vector<float> SamplingUtil::dynamicRangeCompression(std::vector<float> buffer, int windowSize, double overlap) {

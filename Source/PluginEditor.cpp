@@ -11,13 +11,18 @@
 
 //==============================================================================
 SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalAudioProcessor& p, AudioProcessorValueTreeState& vts)
-    : AudioProcessorEditor(&p), Timer(), KeyListener(), audioProcessor(p), vts(vts)
+    : AudioProcessorEditor(&p), KeyListener(), audioProcessor(p), vts(vts), Timer()
 {
     LookAndFeel::setDefaultLookAndFeel(&lf);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
+#if JUCE_DEBUG
+    setSize(1080, 680);
+    //startTimer(100);
+#else
     setSize (400, 680);
+#endif
 
     addAndMakeVisible(infoLabel);
     infoLabel.setBounds(10, 420, 180, 240);
@@ -104,7 +109,9 @@ void SustainPedalAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::white);
     g.setFont (15.0f);
 
-    //g.drawImageWithin(pedalToggle.getToggleState() ? pedalDown : pedalUp, 190, 0, 200, 650, RectanglePlacement::Flags::stretchToFit);
+#if JUCE_DEBUG
+    plot(g, audioProcessor.getSpectralFluxes(), 400, 0, 680, 680, 0.1, false);
+#endif
 }
 
 void SustainPedalAudioProcessorEditor::resized()
@@ -113,12 +120,8 @@ void SustainPedalAudioProcessorEditor::resized()
     // subcomponents in your editor..
 }
 
-void SustainPedalAudioProcessorEditor::timerCallback() {
-    repaint();
-}
-
 bool SustainPedalAudioProcessorEditor::keyPressed(const KeyPress& key, Component*) {
-    if (!audioProcessor.isReady()) return true;
+    if (!audioProcessor.isReady() || !audioProcessor.canRun()) return true;
 
     if (pedalWidget->rebinding) {
         pedalWidget->bindButton.setButtonText(key.getTextDescription());
@@ -144,4 +147,12 @@ bool SustainPedalAudioProcessorEditor::keyStateChanged(bool, Component*) {
         pedalWidget->pedalToggle.setToggleState(false, juce::NotificationType::sendNotification);
     }
     return true;
+}
+
+void SustainPedalAudioProcessorEditor::plot(Graphics& g, std::vector<float> data, int x, int y, int width, int height, double yScale, bool middle) {
+    int nPoints = data.size();
+    if (middle) y += height / 2; else y += height;
+    for (int i = 0; i < nPoints - 1; i++) {
+        g.drawLine(x + width * i / nPoints, y - yScale * data[i], x + width * (i + 1) / nPoints, y - yScale * data[i + 1], 1);
+    }
 }
