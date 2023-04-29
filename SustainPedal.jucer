@@ -47,10 +47,6 @@
                 file="source/util/dsp/TransientDetect.cpp"/>
           <FILE id="AKtVJ9" name="TransientDetect.h" compile="0" resource="0"
                 file="source/util/dsp/TransientDetect.h"/>
-          <FILE id="Gx6eMf" name="TransientDetector.cpp" compile="1" resource="0"
-                file="Source/util/dsp/TransientDetector.cpp"/>
-          <FILE id="Cgl4Ov" name="TransientDetector.h" compile="0" resource="0"
-                file="Source/util/dsp/TransientDetector.h"/>
         </GROUP>
         <FILE id="Nk725Z" name="SustainData.cpp" compile="1" resource="0" file="Source/util/SustainData.cpp"/>
         <FILE id="yxScWc" name="SustainData.h" compile="0" resource="0" file="Source/util/SustainData.h"/>
@@ -118,6 +114,28 @@
         <MODULEPATH id="juce_cryptography" path="../../C++ Libraries/JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_dsp" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="D:\C++ Libraries\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="D:\C++ Libraries\JUCE\modules"/>
+      </MODULEPATHS>
+    </VS2022>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>

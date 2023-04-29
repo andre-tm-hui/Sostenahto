@@ -27,7 +27,7 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-    void timerCallback() override { repaint(); }
+    void timerCallback() override { }//repaint(); }
 
     bool keyPressed(const KeyPress& key, Component* originatingComponent) override;
     bool keyStateChanged(bool isKeyDown, Component*) override;

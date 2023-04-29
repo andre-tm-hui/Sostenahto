@@ -16,6 +16,7 @@ class TransientDetector
 {
 public:
     TransientDetector(int sampleRate, int bufferSize, double frameTime = 0.04, double overlap = 0.75, double trackingTime = 2);
+	~TransientDetector() {}
     void process(std::vector<float> buffer, std::vector<float>& tailBuffer);
 
 	void setSampleRate(int val) { sampleRate = val; setup(); }
@@ -30,14 +31,16 @@ public:
 
 private:
 	void setup();
-	bool detectTransient();
+	bool detectTransient(std::vector<float> input);
 	void applyWindow(std::vector<float>& buf);
 	int sgn(float val);
 
 	std::vector<std::vector<std::complex<float>>> fftHistory;
 	std::vector<std::vector<float>> magStore, phaseStore, fftFunction;
-	std::vector<float> inputStream, frameFlags, windowFunction;
+	std::vector<float> inputStream, frameFlags, windowFunction, sumFunctions;
 	std::vector<bool> transientFrames;
+	bool processing = false;
+	std::unique_ptr<std::future<bool>> isTransient;
 
 	int sampleRate, bufferSize, windowSize, fftSize, nTrackedFrames, stepSize;
 	double overlap, frameTime, trackingTime;

@@ -119,6 +119,7 @@ private:
     std::vector<float> tailSignal, sample;
     std::vector<SustainData*> layers;
     std::vector<SustainData*> fadingOut;
+    std::vector<std::future<std::vector<float>>> generatedSamples;
 
     bool ready = false,
         pedalDown = false,
@@ -138,6 +139,8 @@ private:
         * forcePeriod;
 
     std::string licenseKey = "";
+
+    std::mutex mtx;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SustainPedalAudioProcessor)

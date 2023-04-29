@@ -165,16 +165,26 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     int nSamples = buffer.getNumSamples();
 
     auto* channelData = buffer.getWritePointer(0);
+    mtx.lock();
     td->process(std::vector<float>(channelData, channelData + nSamples), tailSignal);
     // Record the tail of a transient
     if (tailSignal.size() < sr * 5) {
         tailSignal.resize(tailSignal.size() + nSamples);
         memcpy(&tailSignal[tailSignal.size() - nSamples], channelData, sizeof(float) * nSamples);
     }
+    mtx.unlock();
 
     float dryDecimal = *dry / 100.f;
     for (int i = 0; i < nSamples; i++) {
         channelData[i] *= dryDecimal;
+    }
+
+    int nGeneratedSamples = generatedSamples.size();
+    for (int i = nGeneratedSamples - 1; i >= 0; i--) {
+        if (generatedSamples[i]._Is_ready()) {
+            layers.emplace_back(new SustainData(generatedSamples[i].get(), *rise, *tail));
+            generatedSamples.erase(generatedSamples.begin() + i);
+        }
     }
 
     float wetDecimal = *wet / 100.f;
@@ -263,25 +273,29 @@ void SustainPedalAudioProcessor::setPedal(bool val) {
             fadingOut.push_back(layers[0]);
             layers.erase(layers.begin());
         }
-        for (int i = 0; i < layers.size();) {
-            if (layers[i] == nullptr) {
-                layers.erase(layers.begin() + i);
-                continue;
+        for (int i = 0; i < layers.size(); i++) {
+            if (layers[i] != nullptr) {
+                layers[i]->fade(true);
             }
-            layers[i]->fade(true);
-            i++;
         }
-        sample = SamplingUtil::getSample(tailSignal, int(sr * *period), *forcePeriod > 0.5f, (size_t)sr);
-        layers.emplace_back(new SustainData(sample, rise, tail));
+        mtx.lock();
+        generatedSamples.emplace_back(
+            std::async(
+                std::launch::async, 
+                SamplingUtil::getSample, 
+                tailSignal, 
+                int(sr * *period), 
+                *forcePeriod > 0.5f, 
+                (size_t)sr
+            )
+        );
+        mtx.unlock();
     }
     else {
-        for (int i = 0; i < layers.size();) {
-            if (layers[i] == nullptr) {
-                layers.erase(layers.begin() + i);
-                continue;
+        for (int i = 0; i < layers.size(); i++) {
+            if (layers[i] != nullptr) {
+                layers[i]->fade(false);
             }
-            layers[i]->fade(false);
-            i++;
         }
     }
 }

@@ -19,7 +19,7 @@ SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalA
     // editor's size to whatever you need it to be.
 #if JUCE_DEBUG
     setSize(1080, 680);
-    //startTimer(100);
+    startTimer(100);
 #else
     setSize (400, 680);
 #endif

@@ -3,16 +3,13 @@
 std::vector<float> SamplingUtil::getSample(std::vector<float> buffer, int targetSampleLength, bool forcePeriod, size_t sampleRate) {
 	targetSampleLength *= 2; // accounts for 50% overlap in crossfadeSelf
 	if (forcePeriod && buffer.size() < targetSampleLength && buffer.size() > 4096) {
-		// we use a 8192-length window/FFT size for time scaling, as it provides the best balance of quality and performance
+		// we use a 4096-length window/FFT size for time scaling, as it provides the best balance of quality and performance
 		// TODO: investigate quality of this window length for other music-production sample rates - only tested on 48000 currently
 		buffer = timeScale(buffer, targetSampleLength, sampleRate, 4096);
 		crossfadeSelf(buffer);
 		//buffer = dynamicRangeCompression(buffer, 4096);
 	}
 	else {
-		if (buffer.size() < 4096) {
-			DBG("small buffer");
-		}
 		// if the buffer is longer than the target, cap the target length there. Otherwise, make it some fraction of the buffer size, 
 		// less than 0.5 since autocorrelation is symmetrical
 		int adjustedTarget = std::min((double)targetSampleLength, (double)buffer.size());
@@ -168,9 +165,9 @@ std::vector<float> SamplingUtil::timeScale(std::vector<float> buffer, int target
 	// setup constants
 	std::vector<double> windowingFunction(windowSize, 0.0);
 	dsp::WindowingFunction<double>::fillWindowingTables(&windowingFunction[0], windowSize + 1, dsp::WindowingFunction<double>::hann, false);
-	std::vector<double> omegas;
+	std::vector<double> omegas(N / 2, 0.0);
 	for (int i = 0; i < N / 2; i++) {
-		omegas.push_back(MathConstants<double>::twoPi * analysisHopSize * i / N);
+		omegas[i] = MathConstants<double>::twoPi * analysisHopSize * i / N;
 	}
 
 	// pre-processing variables

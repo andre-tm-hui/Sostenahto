@@ -27,7 +27,7 @@ public:
         addAndMakeVisible(pedalToggle);
         pedalToggle.setClickingTogglesState(true);
         pedalToggle.setBounds(0, 0, 200, 650);
-        pedalToggle.onStateChange = [this] { this->audioProcessor.setPedal(pedalToggle.getToggleState()); repaint(); };
+        pedalToggle.onStateChange = [this] { this->audioProcessor.setPedal(pedalToggle.getToggleState()); };
         pedalToggle.setColour(pedalToggle.tickColourId, Colour());
         pedalToggle.setColour(pedalToggle.tickDisabledColourId, Colour());
         pedalUp = ImageCache::getFromMemory(BinaryData::pedalUp_png, BinaryData::pedalUp_pngSize);
