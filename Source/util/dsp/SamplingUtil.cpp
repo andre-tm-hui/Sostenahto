@@ -155,7 +155,7 @@ std::vector<float> SamplingUtil::timeScale(std::vector<float> buffer, int target
 	const size_t analysisHopSize = floor((float)(buffer.size() - windowSize) / (nMarkers - 1.f));//floor((float)buffer.size() / (nMarkers + 1.f));
 	targetLength = (nMarkers - 1) * synthesisHopSize + windowSize; // update the target length with respect to rounding
 	const float timeScaleFactor = (float)synthesisHopSize / (float)analysisHopSize;
-	const float amplitudeScalar = sqrt((float)windowSize / (float)synthesisHopSize);
+	const float rms_input = rms(buffer);
 
 	// setup storage
 	std::vector<double> prevPhases((int)N / 2 + 1, 0.f),
@@ -234,8 +234,9 @@ std::vector<float> SamplingUtil::timeScale(std::vector<float> buffer, int target
 	// remove windowed head and tail
 	out.erase(out.begin(), out.begin() + overlapSize);
 	out.erase(out.end() - overlapSize, out.end());
+	const float ampScalar = rms_input / rms(out);
 	for (auto& val : out) {
-		val *= amplitudeScalar;
+		val *= ampScalar;
 	}
 
 	// apply low-pass filter to clean up stretched sample
