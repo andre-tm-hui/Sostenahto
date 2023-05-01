@@ -42,6 +42,8 @@ SustainPedalAudioProcessor::SustainPedalAudioProcessor() :
     holdToggle = parameters.getRawParameterValue("holdToggle");
     keycode = parameters.getRawParameterValue("keycode");
     forcePeriod = parameters.getRawParameterValue("forcePeriod");
+
+    licenseKey = LicenseManager::loadLicense();
 }
 
 SustainPedalAudioProcessor::~SustainPedalAudioProcessor()

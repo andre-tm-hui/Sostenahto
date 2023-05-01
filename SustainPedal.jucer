@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="gDVZon" name="Sustenato" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="gDVZon" name="Sostenahto" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1"
               splashScreenColour="Dark" pluginFormats="buildAU,buildStandalone,buildVST3"
               pluginCharacteristicsValue="pluginEditorRequiresKeys" pluginVST3Category="Fx,Sampler"
-              pluginDesc="Sustenato for stringed instruments" pluginManufacturer="Andre"
+              pluginDesc="Sostenuto for stringed instruments" pluginManufacturer="ahdio"
               companyWebsite="andre-tm-hui.github.io" headerPath="E:\C++ Libraries\asiosdk_2.3.3_2019-06-14\common"
-              defines="PFFFT_ENABLE_DOUBLE&#10;PFFFT_ENABLE_FLOAT">
-  <MAINGROUP id="vrJnIo" name="Sustenato">
+              defines="PFFFT_ENABLE_DOUBLE&#10;PFFFT_ENABLE_FLOAT" companyName="ahdio"
+              companyEmail="andre.tm.hui@gmail.com">
+  <MAINGROUP id="vrJnIo" name="Sostenahto">
     <GROUP id="{F8DC6BE5-4EAF-E014-6738-F4AC9C6B4D20}" name="pffft">
       <GROUP id="{86632CC3-8157-DB36-DB50-086AB7B297CF}" name="simd">
         <FILE id="uwbpoG" name="pf_avx_double.h" compile="0" resource="0" file="Source/pffft/simd/pf_avx_double.h"/>
@@ -82,6 +83,7 @@
             file="rc/donateButton.png"/>
       <FILE id="kq9jnO" name="donatedAlreadyButton.png" compile="0" resource="1"
             file="rc/donatedAlreadyButton.png"/>
+      <FILE id="Brr3ih" name="icon.png" compile="0" resource="1" file="rc/icon.png"/>
       <FILE id="IqAFyy" name="pedalDown.png" compile="0" resource="1" file="rc/pedalDown.png"/>
       <FILE id="vFULCv" name="pedalUp.png" compile="0" resource="1" file="rc/pedalUp.png"/>
       <FILE id="RP8aOU" name="skipButton.png" compile="0" resource="1" file="rc/skipButton.png"/>
@@ -114,7 +116,7 @@
         <MODULEPATH id="juce_cryptography" path="../../C++ Libraries/JUCE/modules"/>
       </MODULEPATHS>
     </VS2019>
-    <VS2022 targetFolder="Builds/VisualStudio2022">
+    <VS2022 targetFolder="Builds/VisualStudio2022" smallIcon="Brr3ih" bigIcon="Brr3ih">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug"/>
         <CONFIGURATION isDebug="0" name="Release"/>

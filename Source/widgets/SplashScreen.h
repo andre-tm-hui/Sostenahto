@@ -45,7 +45,7 @@ public:
             donateImg, 1.0, Colour(0x00000000), 
             0
         );
-        donate.onClick = [this] { URL("https://www.buymeacoffee.com/andrehui/e/126269").launchInDefaultBrowser(); };
+        donate.onClick = [this] { URL("https://www.buymeacoffee.com/ahdio/e/126269").launchInDefaultBrowser(); };
 
         addAndMakeVisible(generate);
         generate.setBounds(40, 360, 320, 100);
@@ -56,7 +56,7 @@ public:
             generateImg, 1.0, Colour(0x00000000),
             0
         );
-        generate.onClick = [this] { URL("https://andre-tm-hui.github.io/sustenato-pedal/license-manager").launchInDefaultBrowser(); };
+        generate.onClick = [this] { URL("https://andre-tm-hui.github.io/ahdio/sostenahto/license-manager").launchInDefaultBrowser(); };
 
         addAndMakeVisible(skip);
         skip.setBounds(130, 591, 140, 48);

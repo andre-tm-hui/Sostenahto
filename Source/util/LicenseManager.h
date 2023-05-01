@@ -11,7 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 
-const std::string appName = "Sustenato Pedal";
+const std::string appName = "Sostenahto";
 const std::string fileName = "license.cfg";
 
 namespace LicenseManager {
