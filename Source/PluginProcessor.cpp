@@ -203,7 +203,7 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
             continue;
         }
         buffer.addFrom(0, 0, &sustain[0], nSamples);
-        buffer.addFrom(1, 0, &sustain[0], nSamples);
+        //buffer.addFrom(1, 0, &sustain[0], nSamples);
         i++;
     }
 
@@ -219,13 +219,17 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
             continue;
         }
         buffer.addFrom(0, 0, &sustain[0], nSamples);
-        buffer.addFrom(1, 0, &sustain[0], nSamples);
+        //buffer.addFrom(1, 0, &sustain[0], nSamples);
         i++;
     }
-
+    
     for (int i = 1; i < totalNumOutputChannels; i++) {
-        buffer.addFrom(i, 0, channelData, nSamples);
+        buffer.copyFrom(i, 0, channelData, nSamples);
     }
+
+    /*for (int i = 1; i < totalNumOutputChannels; i++) {
+        buffer.addFrom(i, 0, channelData, nSamples);
+    }*/
 }
 
 //==============================================================================
