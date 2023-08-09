@@ -41,26 +41,34 @@ private:
 
     DonateSplashScreen* ss;
 
-    Label infoLabel;
+    Label infoLabel, experimentalLabel;
 
     CustomDial* maxLayersDial,
         *riseDial,
         *tailDial,
         *wetDial,
         *dryDial,
-        *periodDial;
+        *periodDial,
+        *autoGateDial,
+        *autoSampleLengthDial;
 
-    CustomToggleButton* forcePeriodToggle;
+    CustomToggleButton* forcePeriodToggle,
+        *autoSustainToggle,
+        *autoGateDirectionToggle;
 
     std::unique_ptr<SliderAttachment> maxLayersAttachment,
         riseAttachment,
         tailAttachment,
         wetAttachment,
         dryAttachment,
-        periodAttachment;
+        periodAttachment,
+        autoGateAttachment,
+        autoSampleLengthAttachment;
 
     std::unique_ptr<ButtonAttachment> holdAttachment,
-        forcePeriodAttachment;
+        forcePeriodAttachment,
+        autoSustainAttachment,
+        autoGateDirectionAttachment;
 
     PedalWidget* pedalWidget;
 

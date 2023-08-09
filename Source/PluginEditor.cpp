@@ -21,7 +21,7 @@ SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalA
     setSize(1080, 680);
     startTimer(100);
 #else
-    setSize (400, 680);
+    setSize (540, 680);
 #endif
 
     addAndMakeVisible(infoLabel);
@@ -71,6 +71,36 @@ SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalA
     forcePeriodToggle->setClickingTogglesState(true);
     forcePeriodToggle->setTopLeftPosition(46, 384);
     forcePeriodAttachment.reset(new ButtonAttachment(vts, "forcePeriod", *forcePeriodToggle));
+
+    addAndMakeVisible(experimentalLabel);
+    experimentalLabel.setText("EXPERIMENTAL", dontSendNotification);
+    experimentalLabel.setBounds(410, 10, 120, 660);
+    experimentalLabel.setFont(Font(18, Font::bold));
+    experimentalLabel.setColour(Label::ColourIds::backgroundColourId, Colour(0xFF181818));
+    experimentalLabel.setJustificationType(Justification::topLeft);
+    experimentalLabel.setBorderSize(BorderSize<int>(10));
+
+    autoSustainToggle = new CustomToggleButton("Automatic Sustain", infoLabel, "When enabled, the pedal is dynamically triggered based on the attack of a sound.");
+    addAndMakeVisible(autoSustainToggle);
+    autoSustainToggle->setClickingTogglesState(true);
+    autoSustainToggle->setBounds(415, 45, 110, 18);
+    autoSustainAttachment.reset(new ButtonAttachment(vts, "autoSustain", *autoSustainToggle));
+
+    autoGateDial = new CustomDial("Gate", infoLabel, "The attack cutoff value used by Automatic Sustain.");
+    addAndMakeVisible(autoGateDial);
+    autoGateDial->setBounds(415, 90, 110, 85);
+    autoGateAttachment.reset(new SliderAttachment(vts, "autoGate", *autoGateDial));
+
+    autoGateDirectionToggle = new CustomToggleButton("Gate Direction", infoLabel, "When enabled, sounds with a larger attack than this value will be sustained. When disabled, sounds with a smaller attack will be sustained.");
+    addAndMakeVisible(autoGateDirectionToggle);
+    autoGateDirectionToggle->setClickingTogglesState(true);
+    autoGateDirectionToggle->setBounds(415, 185, 110, 18);
+    autoGateDirectionAttachment.reset(new ButtonAttachment(vts, "autoGateDirection", *autoGateDirectionToggle));
+
+    autoSampleLengthDial = new CustomDial("Sample Length", infoLabel, "The length of the sampled clip. This corresponds to the delay before the sustain begins.", "s");
+    addAndMakeVisible(autoSampleLengthDial);
+    autoSampleLengthDial->setBounds(415, 230, 110, 85);
+    autoSampleLengthAttachment.reset(new SliderAttachment(vts, "autoSampleLength", *autoSampleLengthDial));
 
     ss = new DonateSplashScreen(audioProcessor);
     if (!audioProcessor.isReady()) addAndMakeVisible(ss);

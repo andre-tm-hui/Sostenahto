@@ -30,15 +30,23 @@ void TransientDetector::setup() {
     dsp::WindowingFunction<float>::fillWindowingTables(&windowFunction[0], windowSize, dsp::WindowingFunction<float>::blackmanHarris);
 }
 
-void TransientDetector::process(std::vector<float> buffer, std::vector<float>& tailBuffer) {
+float TransientDetector::process(std::vector<float> buffer, std::vector<float>& tailBuffer) {
     for (int i = 0; i < buffer.size(); i++) {
         inputStream.push_back(buffer[i]);
     }
     if (inputStream.size() >= windowSize) {
         bool transient = detectTransient(std::vector<float>(inputStream.begin(), inputStream.begin() + windowSize));
-        if (transient) tailBuffer.clear();
+        float maxAmp = 0.f;
+        if (transient) {
+            for (auto v : tailBuffer) {
+                if (abs(v) > maxAmp) maxAmp = abs(v);
+            }
+            tailBuffer.clear();
+        }
         inputStream.erase(inputStream.begin(), inputStream.begin() + stepSize);
+        if (transient) return maxAmp;
     }
+    return 0.f;
 }
 
 bool TransientDetector::detectTransient(std::vector<float> input) {

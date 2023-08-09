@@ -90,6 +90,7 @@ std::vector<float> SamplingUtil::autocorrelate(std::vector<float> buffer) {
 void SamplingUtil::crossfadeSelf(std::vector<float>& buffer) {
 	if (buffer.size() < 1000) {
 		DBG("fail");
+		return;
 	}
 	size_t windowSize = buffer.size();
 	// default 50% overlap

@@ -17,7 +17,7 @@ class TransientDetector
 public:
     TransientDetector(int sampleRate, int bufferSize, double frameTime = 0.04, double overlap = 0.75, double trackingTime = 2);
 	~TransientDetector() {}
-    void process(std::vector<float> buffer, std::vector<float>& tailBuffer);
+    float process(std::vector<float> buffer, std::vector<float>& tailBuffer);
 
 	void setSampleRate(int val) { sampleRate = val; setup(); }
 	void setBufferSize(int val) { bufferSize = val; setup(); }

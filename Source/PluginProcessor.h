@@ -111,6 +111,9 @@ public:
 #endif
 
 private:
+    void handleSustainStateChange();
+
+    //==============================================================================
     AudioProcessorValueTreeState parameters;
 
     //==============================================================================
@@ -128,7 +131,8 @@ private:
 
     int sr;
 
-    std::atomic<float>* rise,
+    std::atomic<float>* sustainState,
+        * rise,
         * tail,
         * wet,
         * dry,
@@ -136,7 +140,14 @@ private:
         * maxLayers,
         * holdToggle,
         * keycode,
-        * forcePeriod;
+        * forcePeriod,
+        * autoSustain,
+        * autoGate,
+        * autoGateDirection,
+        * autoSampleLength; 
+
+    float previousSustainState = 0.f;
+    int waitFor = INT_MIN;
 
     std::string licenseKey = "";
 

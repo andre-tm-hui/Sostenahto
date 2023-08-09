@@ -30,14 +30,14 @@ public:
             return;
         }
 
-        setSize(400, 680);
+        setSize(540, 680);
         bg = ImageCache::getFromMemory(BinaryData::splashScreen_png, BinaryData::splashScreen_pngSize);
         donateImg = ImageCache::getFromMemory(BinaryData::donateButton_png, BinaryData::donateButton_pngSize);
         generateImg = ImageCache::getFromMemory(BinaryData::donatedAlreadyButton_png, BinaryData::donatedAlreadyButton_pngSize);
         skipImg = ImageCache::getFromMemory(BinaryData::skipButton_png, BinaryData::skipButton_pngSize);
-        
+
         addAndMakeVisible(donate);
-        donate.setBounds(40, 168, 320, 106);
+        donate.setBounds(110, 168, 320, 106);
         donate.setImages(
             true, true, true, 
             donateImg, 1.0, Colour(0x00000000),
@@ -48,7 +48,7 @@ public:
         donate.onClick = [this] { URL("https://www.buymeacoffee.com/ahdio/e/126269").launchInDefaultBrowser(); };
 
         addAndMakeVisible(generate);
-        generate.setBounds(40, 360, 320, 100);
+        generate.setBounds(110, 360, 320, 100);
         generate.setImages(
             true, true, true,
             generateImg, 1.0, Colour(0x00000000),
@@ -59,7 +59,7 @@ public:
         generate.onClick = [this] { URL("https://andre-tm-hui.github.io/ahdio/sostenahto/license-manager").launchInDefaultBrowser(); };
 
         addAndMakeVisible(skip);
-        skip.setBounds(130, 591, 140, 48);
+        skip.setBounds(200, 591, 140, 48);
         skip.setImages(
             true, true, true,
             skipImg, 1.0, Colour(0x00000000),
@@ -70,22 +70,22 @@ public:
         skip.onClick = [this] { this->audioProcessor.start(); delete this; };
 
         addAndMakeVisible(reg);
-        reg.setBounds(150, 542, 100, 24);
+        reg.setBounds(220, 542, 100, 24);
         reg.setButtonText("REGISTER");
         reg.onClick = [this] { registerLicenseKey(); };
 
         addAndMakeVisible(deviceIdButton);
-        deviceIdButton.setBounds(46, 511, 140, 26);
+        deviceIdButton.setBounds(116, 511, 140, 26);
         deviceIdButton.setButtonText(deviceId);
         deviceIdButton.onClick = [this] { SystemClipboard::copyTextToClipboard(deviceId); addAndMakeVisible(copied); };
-        copied.setBounds(46, 539, 140, 12);
+        copied.setBounds(116, 539, 140, 12);
         copied.setText("Copied!", dontSendNotification);
         copied.setFont(Font(12));
 
         addAndMakeVisible(licenseKeyEditor);
-        licenseKeyEditor.setBounds(206, 511, 140, 26);
+        licenseKeyEditor.setBounds(276, 511, 140, 26);
         addAndMakeVisible(licenseErr);
-        licenseErr.setBounds(206, 539, 140, 12);
+        licenseErr.setBounds(276, 539, 140, 12);
         licenseErr.setText("", dontSendNotification);
         licenseErr.setFont(Font(12));
     }
@@ -96,7 +96,10 @@ public:
 
     void paint (juce::Graphics& g) override
     {
-        g.drawImageWithin(bg, 0, 0, 400, 680, RectanglePlacement::Flags::stretchToFit); // draw some placeholder text
+        g.setColour(juce::Colour(0xC8000000));
+        g.fillRect(0, 0, 540, 680);
+        g.setColour(juce::Colour(0xFF000000));
+        g.drawImageWithin(bg, 70, 0, 400, 680, RectanglePlacement::Flags::stretchToFit); // draw some placeholder text
     }
 
     void resized() override
@@ -202,6 +205,7 @@ private:
     Label copied, licenseErr;
     TextEditor licenseKeyEditor;
     Image bg, donateImg, generateImg, skipImg;
+    juce::Rectangle<int> bg_colour;
 
     std::string deviceId;
 
