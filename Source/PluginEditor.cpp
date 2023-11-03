@@ -10,23 +10,24 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalAudioProcessor& p, AudioProcessorValueTreeState& vts) :
+SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalAudioProcessor& p, juce::AudioProcessorValueTreeState& vts) :
     AudioProcessorEditor(&p),
     KeyListener(),
     audioProcessor(p),
     vts(vts),
     Timer(),
-    navbar({ "Home", "Auto-Trigger" })
+    navbar({ "Home", "Auto-Trigger" }),
+    db({ vts.getParameter(Param::ID::wet), vts.getParameter(Param::ID::dry), vts.getParameter(Param::ID::period) }, tooltipBox)
 {
     LookAndFeel::setDefaultLookAndFeel(&lf);
-    addChildComponent(navbar);
     addAndMakeVisible(navbar);
-    addChildComponent(tooltipBox);
     addAndMakeVisible(tooltipBox);
     
-    dials.emplace_back(std::make_unique<Dial>(Param::ID::dry, vts, &tooltipBox));
-    dials[0]->setBounds(210, 50, 100, 120);
-    addAndMakeVisible(*dials[0]);
+    //dials.emplace_back(std::make_unique<Dial>(vts.getParameter(Param::ID::dry), &tooltipBox));
+    //dials[0]->setBounds(210, 50, 100, 120);
+    //addAndMakeVisible(*dials[0]);
+    addAndMakeVisible(db);
+    db.setBounds(210, 50, 200, 480);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -124,7 +125,7 @@ SustainPedalAudioProcessorEditor::SustainPedalAudioProcessorEditor(SustainPedalA
 
 SustainPedalAudioProcessorEditor::~SustainPedalAudioProcessorEditor()
 {
-    if (!audioProcessor.isReady()) delete ss;
+    //if (!audioProcessor.isReady()) delete ss;
 }
 
 //==============================================================================

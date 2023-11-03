@@ -67,6 +67,7 @@
         </GROUP>
       </GROUP>
       <GROUP id="{2DEDD399-F219-91E8-3C8E-634467F6BB6A}" name="util">
+        <FILE id="MbB090" name="APVTS.h" compile="0" resource="0" file="source/util/APVTS.h"/>
         <GROUP id="{0989CE28-4B12-2EBF-7354-3433878B3646}" name="params">
           <FILE id="rUgVnv" name="ParameterBuilder.hpp" compile="0" resource="0"
                 file="source/util/ParameterBuilder.hpp"/>

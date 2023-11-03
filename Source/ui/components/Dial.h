@@ -19,15 +19,16 @@
 class Dial : public HoverForTooltip
 {
 public:
-    Dial(const std::string& id, juce::AudioProcessorValueTreeState& vts, TooltipBox* tooltipBox)
-        : HoverForTooltip(id, tooltipBox), sliderAttachment(*vts.getParameter(id), slider)
+    Dial(juce::RangedAudioParameter* rap, TooltipBox* tooltipBox) : 
+        HoverForTooltip(rap->getParameterID().toStdString(), tooltipBox), 
+        sliderAttachment(*rap, slider)
     {
         slider.setSliderStyle(juce::Slider::SliderStyle::Rotary);
-        slider.setTextValueSuffix(vts.getParameter(id)->getLabel());
-        slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, slider.getTextBoxWidth(), slider.getTextBoxHeight());
+        slider.setTextValueSuffix(rap->getLabel());
+        slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, slider.getTextBoxWidth(), slider.getTextBoxHeight());
         
         addAndMakeVisible(slider);
-        label.setText(vts.getParameter(id)->getParameterID(), juce::sendNotification);
+        label.setText(rap->getParameterID(), juce::sendNotification);
         label.attachToComponent(&slider, false);
         label.setJustificationType(juce::Justification::centred);
     }

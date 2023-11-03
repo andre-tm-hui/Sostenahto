@@ -17,6 +17,7 @@
 #include "widgets/SplashScreen.h"
 
 #include "ui/components/Dial.h"
+#include "ui/components/DialBox.h"
 
 //==============================================================================
 
@@ -24,7 +25,7 @@
 class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public KeyListener, public Timer
 {
 public:
-    SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor&, AudioProcessorValueTreeState&);
+    SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor&, juce::AudioProcessorValueTreeState&);
     ~SustainPedalAudioProcessorEditor() override;
 
     //==============================================================================
@@ -49,6 +50,7 @@ private:
     Navbar navbar;
     TooltipBox tooltipBox;
     std::vector<std::unique_ptr<Dial>> dials;
+    DialBox db;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
