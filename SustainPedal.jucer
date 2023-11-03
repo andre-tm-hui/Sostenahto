@@ -39,7 +39,39 @@
             file="Source/pffft/pffft_priv_impl.h"/>
     </GROUP>
     <GROUP id="{E218D6CA-93C3-F37B-AC8F-45001CACCC66}" name="source">
+      <GROUP id="{469AE178-36BE-10CD-73A4-F3DECC7F30E0}" name="ui">
+        <GROUP id="{96FF65AD-CD9C-7574-FF47-E83DFFA441DE}" name="root">
+          <GROUP id="{5873AEE9-CF4B-3A15-3136-FF01D6C73AE7}" name="pedal"/>
+          <GROUP id="{6069FBD2-B6D5-F52D-6E8A-12F14D301F74}" name="autoTrigger">
+            <FILE id="LxbLrv" name="AutoTriggerMenu.h" compile="0" resource="0"
+                  file="source/ui/root/autoTrigger/AutoTriggerMenu.h"/>
+          </GROUP>
+          <GROUP id="{718C3C3B-1FEA-426F-7F45-78AE7D07A366}" name="home">
+            <FILE id="o6il3K" name="HomeMenu.h" compile="0" resource="0" file="source/ui/root/home/HomeMenu.h"/>
+          </GROUP>
+          <GROUP id="{05ECAD1B-D3EF-373D-1743-0684E321DAD0}" name="navbar">
+            <FILE id="FNEWnr" name="Navbar.h" compile="0" resource="0" file="Source/ui/root/navbar/Navbar.h"/>
+          </GROUP>
+        </GROUP>
+        <GROUP id="{3AA74A17-FEBD-DFC1-FFA5-59E7AB548F45}" name="components">
+          <FILE id="DyjW6c" name="Dial.h" compile="0" resource="0" file="source/ui/components/Dial.h"/>
+          <FILE id="fkwaXc" name="DialBox.h" compile="0" resource="0" file="source/ui/components/DialBox.h"/>
+          <FILE id="h3lGcK" name="HoverForTooltip.h" compile="0" resource="0"
+                file="source/ui/components/HoverForTooltip.h"/>
+          <FILE id="bEcc8S" name="TooltipBox.h" compile="0" resource="0" file="source/ui/components/TooltipBox.h"/>
+        </GROUP>
+        <GROUP id="{8A982E73-6541-96CB-E6EC-5E4710F29B73}" name="lookAndFeel">
+          <FILE id="TBxV8y" name="CustomLookAndFeel.h" compile="0" resource="0"
+                file="Source/ui/lookAndFeel/CustomLookAndFeel.h"/>
+          <FILE id="xKMPU7" name="TabButtonLF.h" compile="0" resource="0" file="source/ui/lookAndFeel/TabButtonLF.h"/>
+        </GROUP>
+      </GROUP>
       <GROUP id="{2DEDD399-F219-91E8-3C8E-634467F6BB6A}" name="util">
+        <GROUP id="{0989CE28-4B12-2EBF-7354-3433878B3646}" name="params">
+          <FILE id="rUgVnv" name="ParameterBuilder.hpp" compile="0" resource="0"
+                file="source/util/ParameterBuilder.hpp"/>
+          <FILE id="K7i07f" name="ParamIDs.h" compile="1" resource="0" file="source/util/params/ParamIDs.h"/>
+        </GROUP>
         <GROUP id="{DC9943DE-A380-C12A-C9FB-8EF68F49782C}" name="dsp">
           <FILE id="By9Jib" name="SamplingUtil.cpp" compile="1" resource="0"
                 file="Source/util/dsp/SamplingUtil.cpp"/>
@@ -63,8 +95,6 @@
       </GROUP>
       <GROUP id="{6DFFD775-EC67-68C4-E2DA-D42E64C5EDC3}" name="widgets">
         <FILE id="Y0NJHd" name="CustomDial.h" compile="0" resource="0" file="Source/widgets/CustomDial.h"/>
-        <FILE id="WymBNV" name="CustomLookAndFeel.h" compile="0" resource="0"
-              file="Source/widgets/CustomLookAndFeel.h"/>
         <FILE id="Div9YW" name="MousePassthrough.h" compile="0" resource="0"
               file="Source/widgets/MousePassthrough.h"/>
         <FILE id="Cq0CKQ" name="PedalWidget.h" compile="0" resource="0" file="Source/widgets/PedalWidget.h"/>

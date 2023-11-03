@@ -5,7 +5,7 @@
 class SustainData
 {
 public:
-	SustainData(std::vector<float> buffer, std::atomic<float>& rise, std::atomic<float>& tail);
+	SustainData(std::vector<float> buffer, AudioParameterFloat* rise, AudioParameterFloat* tail);
 	SustainData(const SustainData& copy) :
 		rise(copy.rise), tail(copy.tail), buffer(copy.buffer), size(copy.size) {}
 	~SustainData() {};
@@ -16,7 +16,7 @@ public:
 
 private:
 	float volume = 0.f;
-	std::atomic<float>& rise, & tail;
+	AudioParameterFloat* rise, * tail;
 	bool fadeIn = true;
 	std::vector<float> buffer;
 	int size, pointer = 0;

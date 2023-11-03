@@ -10,10 +10,13 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "widgets/CustomLookAndFeel.h"
+#include "ui/root/navbar/Navbar.h"
+#include "ui/lookAndFeel/CustomLookAndFeel.h"
 #include "widgets/CustomDial.h"
 #include "widgets/PedalWidget.h"
 #include "widgets/SplashScreen.h"
+
+#include "ui/components/Dial.h"
 
 //==============================================================================
 
@@ -43,34 +46,9 @@ private:
 
     Label infoLabel, experimentalLabel;
 
-    CustomDial* maxLayersDial,
-        *riseDial,
-        *tailDial,
-        *wetDial,
-        *dryDial,
-        *periodDial,
-        *autoGateDial,
-        *autoSampleLengthDial;
-
-    CustomToggleButton* forcePeriodToggle,
-        *autoSustainToggle,
-        *autoGateDirectionToggle;
-
-    std::unique_ptr<SliderAttachment> maxLayersAttachment,
-        riseAttachment,
-        tailAttachment,
-        wetAttachment,
-        dryAttachment,
-        periodAttachment,
-        autoGateAttachment,
-        autoSampleLengthAttachment;
-
-    std::unique_ptr<ButtonAttachment> holdAttachment,
-        forcePeriodAttachment,
-        autoSustainAttachment,
-        autoGateDirectionAttachment;
-
-    PedalWidget* pedalWidget;
+    Navbar navbar;
+    TooltipBox tooltipBox;
+    std::vector<std::unique_ptr<Dial>> dials;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

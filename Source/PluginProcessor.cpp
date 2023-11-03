@@ -10,50 +10,53 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SustainPedalAudioProcessor::SustainPedalAudioProcessor() :
-    parameters(*this, nullptr, Identifier("APVTS"), {
-            std::make_unique<AudioParameterBool>("sustainState", "Sustain State", false),
-            std::make_unique<AudioParameterFloat>("wet", "Wet", 0.f, 100.f, 70.f),
-            std::make_unique<AudioParameterFloat>("dry", "Dry", 0.f, 100.f, 100.f),
-            std::make_unique<AudioParameterFloat>("rise", "Rise", 0.f, 5.f, 0.5f),
-            std::make_unique<AudioParameterFloat>("tail", "Tail", 0.f, 5.f, 1.f),
-            std::make_unique<AudioParameterFloat>("period", "Period", 0.01f, 1.5f, 0.5f),
-            std::make_unique<AudioParameterInt>("maxLayers", "Max Layers", 1, 10, 1),
-            std::make_unique<AudioParameterBool>("holdToggle", "Hold to sustain", true),
-            std::make_unique<AudioParameterInt>("keycode", "Keycode", -1, INT_MAX, -1),
-            std::make_unique<AudioParameterBool>("forcePeriod", "Force Period", true),
-            std::make_unique<AudioParameterBool>("autoSustain", "Auto Sustain", false),
-            std::make_unique<AudioParameterFloat>("autoGate", "Gate", 0.f, 1.f, 0.2f),
-            std::make_unique<AudioParameterBool>("autoGateDirection", "Gate Direction", false),
-            std::make_unique<AudioParameterFloat>("autoSampleLength", "Sample Length", 0.f, 2.f, 0.2f)
-        })
+SustainPedalAudioProcessor::SustainPedalAudioProcessor() :   
 #ifndef JucePlugin_PreferredChannelConfigurations
-    , AudioProcessor(BusesProperties()
+    AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
 #if ! JucePlugin_IsSynth
         .withInput("Input", AudioChannelSet::stereo(), true)
 #endif
         .withOutput("Output", AudioChannelSet::stereo(), true)
 #endif
-    )
+    ),
 #endif
+    parameters(*this, nullptr, Identifier("APVTS"), createParameterLayout())
 {
-    sustainState = parameters.getRawParameterValue("sustainState");
+    auto storeFloatParam = [&parameters = this->parameters](auto& param, const auto& paramID)
+    {
+        param = dynamic_cast<juce::AudioParameterFloat*> (parameters.getParameter(paramID));
+        jassert(param != nullptr);
+    };
 
-    wet = parameters.getRawParameterValue("wet");
-    dry = parameters.getRawParameterValue("dry");
-    rise = parameters.getRawParameterValue("rise");
-    tail = parameters.getRawParameterValue("tail");
-    period = parameters.getRawParameterValue("period");
-    maxLayers = parameters.getRawParameterValue("maxLayers");
-    holdToggle = parameters.getRawParameterValue("holdToggle");
-    keycode = parameters.getRawParameterValue("keycode");
-    forcePeriod = parameters.getRawParameterValue("forcePeriod");
+    storeFloatParam(rise, Param::ID::rise);
+    storeFloatParam(tail, Param::ID::tail);
+    storeFloatParam(wet, Param::ID::wet);
+    storeFloatParam(dry, Param::ID::dry);
+    storeFloatParam(period, Param::ID::period);
+    storeFloatParam(autoGate, Param::ID::autoGate);
+    storeFloatParam(autoSampleLength, Param::ID::autoSampleLength);
 
-    autoSustain = parameters.getRawParameterValue("autoSustain");
-    autoGate = parameters.getRawParameterValue("autoGate");
-    autoGateDirection = parameters.getRawParameterValue("autoGateDirection");
-    autoSampleLength = parameters.getRawParameterValue("autoSampleLength");
+    auto storeIntParam = [&parameters = this->parameters](auto& param, const auto& paramID)
+    {
+        param = dynamic_cast<juce::AudioParameterInt*> (parameters.getParameter(paramID));
+        jassert(param != nullptr);
+    };
+
+    storeIntParam(maxLayers, Param::ID::maxLayers);
+    storeIntParam(keycode, Param::ID::keycode);
+
+    auto storeBoolParam = [&parameters = this->parameters](auto& param, const auto& paramID)
+    {
+        param = dynamic_cast<juce::AudioParameterBool*> (parameters.getParameter(paramID));
+        jassert(param != nullptr);
+    };
+
+    storeBoolParam(sustainState, Param::ID::sustainState);
+    storeBoolParam(holdToggle, Param::ID::holdToggle);
+    storeBoolParam(forcePeriod, Param::ID::forcePeriod);
+    storeBoolParam(autoSustain, Param::ID::autoSustain);
+    storeBoolParam(autoGateDirection, Param::ID::autoGateDirection);
 
     licenseKey = LicenseManager::loadLicense();
 }
@@ -188,18 +191,18 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
 
     if (*autoSustain == 1.f) {
         if (amplitude > 0.02f) {
-            if (*autoGateDirection == 1.f && amplitude > *autoGate ||
-                *autoGateDirection == 0.f && amplitude < *autoGate) {
+            if (autoGateDirection->get() && amplitude > autoGate->get() ||
+                !autoGateDirection->get() && amplitude < autoGate->get()) {
                 waitFor = 48000 * *autoSampleLength;
             }
         }
-        else if (amplitude > 0.f && waitFor > -nSamples && 48000 * *autoSampleLength - waitFor > 1000) {
-            waitFor = 48000 * *autoSampleLength - waitFor < 1000 ? -nSamples : 0;
+        else if (amplitude > 0.f && waitFor > -nSamples && 48000 * autoSampleLength->get() - waitFor > 1000) {
+            waitFor = 48000 * autoSampleLength->get() - waitFor < 1000 ? -nSamples : 0;
         }
         if (waitFor <= 0 && waitFor > -nSamples) {
-            *sustainState = 0;
+            sustainState->setValueNotifyingHost(false);
             handleSustainStateChange();
-            *sustainState = 1;
+            sustainState->setValueNotifyingHost(true);
         }
         if (waitFor > -nSamples) {
             waitFor -= nSamples;
@@ -208,7 +211,7 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     
     handleSustainStateChange();
 
-    float dryDecimal = *dry / 100.f;
+    float dryDecimal = dry->get() / 100.f;
     for (int i = 0; i < nSamples; i++) {
         channelData[i] *= dryDecimal;
     }
@@ -216,12 +219,12 @@ void SustainPedalAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiB
     int nGeneratedSamples = generatedSamples.size();
     for (int i = nGeneratedSamples - 1; i >= 0; i--) {
         if (generatedSamples[i]._Is_ready()) {
-            layers.emplace_back(new SustainData(generatedSamples[i].get(), *rise, *tail));
+            layers.emplace_back(new SustainData(generatedSamples[i].get(), rise, tail));
             generatedSamples.erase(generatedSamples.begin() + i);
         }
     }
 
-    float wetDecimal = *wet / 100.f;
+    float wetDecimal = wet->get() / 100.f;
     // If the pedal is triggered
     for (int i = 0; i < layers.size();) {
         if (layers[i] == nullptr) {
@@ -303,8 +306,8 @@ void SustainPedalAudioProcessor::setStateInformation (const void* data, int size
 }
 
 void SustainPedalAudioProcessor::setPedal(bool val) {    
-    if (val && *autoSustain == 1.f) return;
-    *sustainState = val ? 1.f : 0.f;
+    if (val && autoSustain->get()) return;
+    sustainState->setValueNotifyingHost(val);
     /*return;
     pedalDown = val;
     if (pedalDown) {
@@ -341,9 +344,9 @@ void SustainPedalAudioProcessor::setPedal(bool val) {
 }
 
 void SustainPedalAudioProcessor::handleSustainStateChange() {
-    if (*sustainState != previousSustainState) {
-        if (*sustainState == 1.f) {
-            while (layers.size() >= *maxLayers) {
+    if (sustainState->get() != previousSustainState) {
+        if (sustainState->get()) {
+            while (layers.size() >= maxLayers->get()) {
                 layers[0]->fade(false);
                 fadingOut.push_back(layers[0]);
                 layers.erase(layers.begin());
@@ -358,8 +361,8 @@ void SustainPedalAudioProcessor::handleSustainStateChange() {
                     std::launch::async,
                     SamplingUtil::getSample,
                     tailSignal,
-                    int(sr * *period),
-                    *forcePeriod > 0.5f,
+                    int(sr * period->get()),
+                    forcePeriod->get(),
                     (size_t)sr
                 )
             );
@@ -371,7 +374,7 @@ void SustainPedalAudioProcessor::handleSustainStateChange() {
                 }
             }
         }
-        previousSustainState = *sustainState;
+        previousSustainState = sustainState->get();
     }
 }
 

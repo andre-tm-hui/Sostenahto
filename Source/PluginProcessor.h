@@ -70,32 +70,16 @@ public:
     //==============================================================================
     void setPedal(bool val);
 
-    void setMaxLayers(int val) { *maxLayers = (float)val; }
-    int getMaxLayers() { return (int)*maxLayers; }
+    bool getHoldToSustain() { return holdToggle->get(); }
 
-    void setRise(float val) { *rise = val; }
-    float getRise() { return *rise; }
-
-    void setTail(float val) { *tail = val; }
-    float getTail() { return *tail; }
-
-    void setWet(float val) { *wet = val; }
-    float getWet() { return *wet; }
-
-    void setDry(float val) { *dry = val; }
-    float getDry() { return *dry; }
-
-    void setTargetSampleLength(float val) { *period = val; }
-    float getTargetSampleLength() { return *period; }
-
-    void setHoldToSustain(bool val) { *holdToggle = val; }
-    bool getHoldToSustain() { return *holdToggle > 0.5f; }
-
-    void setKeycode(int val) { *keycode = (float)val; }
-    int getKeycode() { return (int)*keycode; }
-
-    void setForcePeriod(bool val) { *forcePeriod = val; }
-    bool getForcePeriod() { return *forcePeriod > 0.5f; }
+    int getKeycode() { DBG(keycode->get()); return keycode->get(); }
+    void setKeycode(int kc) { 
+        DBG(kc); 
+        keycode->beginChangeGesture(); 
+        keycode->setValueNotifyingHost(kc); 
+        keycode->endChangeGesture();
+        DBG(keycode->get());
+    }
 
     void setLicenseKey(std::string val) { licenseKey = val; LicenseManager::saveLicense(licenseKey); }
     std::string getLicenseKey() { return licenseKey; }
@@ -131,22 +115,24 @@ private:
 
     int sr;
 
-    std::atomic<float>* sustainState,
-        * rise,
+    AudioParameterFloat* rise,
         * tail,
         * wet,
         * dry,
         * period,
-        * maxLayers,
-        * holdToggle,
-        * keycode,
-        * forcePeriod,
-        * autoSustain,
         * autoGate,
-        * autoGateDirection,
         * autoSampleLength; 
 
-    float previousSustainState = 0.f;
+    AudioParameterInt* maxLayers,
+        * keycode;
+
+    AudioParameterBool* sustainState,
+        * holdToggle,
+        * forcePeriod,
+        * autoSustain,
+        * autoGateDirection;
+
+    bool previousSustainState = false;
     int waitFor = INT_MIN;
 
     std::string licenseKey = "";

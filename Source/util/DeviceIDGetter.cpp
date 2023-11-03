@@ -73,7 +73,7 @@ std::string getSystemId()
 
     system_info = system_info_ss.str();
 #endif
-    system_info += SALT;
+    system_info += salt;
     // Hash the system info using SHA-1
     //unsigned char hash[SHA_DIGEST_LENGTH];
     //SHA1((const unsigned char*)system_info.c_str(), system_info.length(), hash);

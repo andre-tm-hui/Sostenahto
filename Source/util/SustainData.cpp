@@ -1,6 +1,6 @@
 #include "SustainData.h"
 
-SustainData::SustainData(std::vector<float> buffer, std::atomic<float>& rise, std::atomic<float>& tail) :
+SustainData::SustainData(std::vector<float> buffer, AudioParameterFloat* rise, AudioParameterFloat* tail) :
 	buffer(buffer), rise(rise), tail(tail), size(buffer.size())
 {}
 
@@ -11,10 +11,10 @@ std::vector<float> SustainData::getSample(int nSamples, float wet, int samplingR
 	auto out = std::vector<float>(nSamples, 0);
 	float step;
 	if (fadeIn) {
-		step = rise.load();
+		step = rise->get();
 	}
 	else {
-		step = -tail.load();
+		step = -tail->get();
 	}
 	step = 1 / (step * samplingRate);
 	
