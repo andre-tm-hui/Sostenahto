@@ -27,4 +27,23 @@ public:
 		cs.setUIColour(ColourScheme::menuText, Colour(0xFFD0D0D0));
 		setColourScheme(cs);
 	}
+
+	void drawGroupComponentOutline(Graphics& g, int w, int h, const String& text, const Justification& justification, GroupComponent&) override {
+		float textHeight = juce::Label().getFont().getHeight(),
+			textWidth = juce::Label().getFont().getStringWidth(text),
+			lineY = textHeight / 2;
+		juce::Rectangle<float> textBox((w - textWidth) / 2.f, 0.f, textWidth, textHeight);
+		juce::Colour textColour = getCurrentColourScheme().getUIColour(ColourScheme::defaultText);
+
+		// TODO: set colour using lookAndFeel
+		g.setColour(textColour);
+		// draw divider line
+		g.drawHorizontalLine(lineY, 0, w);
+		// clear out an area for the text
+		g.setColour(findColour(juce::ResizableWindow::backgroundColourId));
+		g.fillRect(textBox);
+		// draw text
+		g.setColour(textColour);
+		g.drawText(text, textBox, justification);
+	}
 };

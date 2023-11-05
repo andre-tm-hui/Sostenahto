@@ -12,7 +12,6 @@
 
 #include <JuceHeader.h>
 #include "HoverForTooltip.h"
-#include "TooltipBox.h"
 
 //==============================================================================
 
@@ -45,10 +44,9 @@ public:
     void resized() override
     {
         int size = min(getWidth(), getHeight() - label.getHeight());
-        float paddingFactor = 1.f - 2.f * padding;
-        label.setSize(size * paddingFactor, label.getHeight());
-        slider.setSize(size * paddingFactor, size * paddingFactor);
-        slider.setCentrePosition(getWidth() / 2, label.getHeight() / 2 + getHeight() / 2);
+        auto area = getLocalBounds().reduced(padding);
+        area.removeFromTop(label.getHeight());
+        slider.setBounds(area);
     }
 
 private:
@@ -56,7 +54,7 @@ private:
     juce::SliderParameterAttachment sliderAttachment;
     juce::Label label;
 
-    float padding = 0.05f;
+    int padding = 5;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Dial)
 };

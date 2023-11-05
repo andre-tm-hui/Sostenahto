@@ -11,6 +11,9 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../../components/DialBox.h"
+#include "../../components/Switch.h"
+#include "../../components/TooltipBox.h"
 
 //==============================================================================
 /*
@@ -18,11 +21,39 @@
 class Home  : public juce::Component
 {
 public:
-    Home()
+    Home(juce::AudioProcessorValueTreeState& vts, TooltipBox& tooltipBox) :
+        forcePeriodSwitch(vts.getParameter(Param::ID::forcePeriod), &tooltipBox)
     {
-        // In your constructor, you should add any child components, and
-        // initialise any special settings that your component needs.
+        mainSettings = std::make_unique<DialBox>(
+            std::vector<juce::RangedAudioParameter*>{
+                vts.getParameter(Param::ID::wet),
+                vts.getParameter(Param::ID::dry),
+            },
+            tooltipBox,
+            "Mix"
+        );
+        addAndMakeVisible(*mainSettings);
+        //mainLabel.setText("Mix", juce::sendNotification);
+        //mainLabel.attachToComponent(mainSettings.get(), false);
 
+        timeSettings = std::make_unique<DialBox>(
+            std::vector<juce::RangedAudioParameter*>{
+                vts.getParameter(Param::ID::rise),
+                vts.getParameter(Param::ID::tail),
+                vts.getParameter(Param::ID::period),
+                vts.getParameter(Param::ID::maxLayers),
+        },
+            tooltipBox,
+            "Sustain"
+        );
+        addAndMakeVisible(*timeSettings);
+        //timeLabel.setText("Sustain", juce::sendNotification);
+        //timeLabel.attachToComponent(timeSettings.get(), false);
+
+        // TODO: add checkbox/switch for forcePeriod
+        addAndMakeVisible(forcePeriodSwitch);
+
+        //addAndMakeVisible(tooltipBox);
     }
 
     ~Home() override
@@ -31,31 +62,42 @@ public:
 
     void paint (juce::Graphics& g) override
     {
-        /* This demo code just fills the component's background and
-           draws some placeholder text to get you started.
-
-           You should replace everything in this method with your own
-           drawing code..
-        */
-
-        g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-
-        g.setColour (juce::Colours::grey);
-        g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-        g.setColour (juce::Colours::white);
-        g.setFont (14.0f);
-        g.drawText ("Home", getLocalBounds(),
-                    juce::Justification::centred, true);   // draw some placeholder text
+        g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background // draw some placeholder text
     }
 
     void resized() override
     {
-        // This method is where you should set the bounds of any child
-        // components that your component contains..
+        auto area = getLocalBounds().reduced(padding);
 
+        size_t width = area.getWidth(),
+            height = area.getHeight(),
+            labelHeight = juce::Label().getFont().getHeight(),
+            dialSpaceHeight = height - 2 * (spacing + labelHeight) - switchHeight,
+            dialHeight = min(dialSpaceHeight / (mainNrows + timeNrows), maxDialHeight),
+            mainHeight = labelHeight + dialHeight * mainNrows,
+            timeHeight = labelHeight + dialHeight * timeNrows;
+
+        mainSettings->setBounds(area.removeFromTop(mainHeight + mainLabel.getHeight()).reduced(5));
+        area.removeFromTop(spacing);
+        timeSettings->setBounds(area.removeFromTop(timeHeight + timeLabel.getHeight()).reduced(5));
+        forcePeriodSwitch.setSize(width, switchHeight);
+        forcePeriodSwitch.setBounds(area.removeFromTop(forcePeriodSwitch.getHeight()));
     }
 
 private:
+    std::unique_ptr<DialBox> mainSettings,
+                             timeSettings;
+    Switch forcePeriodSwitch;
+    juce::Label mainLabel,
+                timeLabel;
+
+    const size_t
+        maxDialHeight = 120,
+        switchHeight = 36,
+        spacing = 24,
+        padding = 5,
+        mainNrows = 1,
+        timeNrows = 2;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Home)
 };

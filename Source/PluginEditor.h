@@ -16,13 +16,12 @@
 #include "widgets/PedalWidget.h"
 #include "widgets/SplashScreen.h"
 
-#include "ui/components/Dial.h"
-#include "ui/components/DialBox.h"
+#include "ui/root/home/HomeMenu.h"
 
 //==============================================================================
 
 
-class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public KeyListener, public Timer
+class SustainPedalAudioProcessorEditor  : public AudioProcessorEditor, public KeyListener, public Timer, public juce::ActionListener
 {
 public:
     SustainPedalAudioProcessorEditor (SustainPedalAudioProcessor&, juce::AudioProcessorValueTreeState&);
@@ -39,6 +38,12 @@ public:
 private:
     void plot(Graphics& g, std::vector<float> data, int x, int y, int width, int height, double yScale, bool middle = true);
 
+    void actionListenerCallback(const String&) override;
+
+    void navTo(const String&);
+
+    void shiftMenus(const int&);
+
     AudioProcessorValueTreeState& vts;
 
     CustomLookAndFeel lf;
@@ -47,10 +52,15 @@ private:
 
     Label infoLabel, experimentalLabel;
 
+    ComponentAnimator animator;
     Navbar navbar;
+    Home home;
     TooltipBox tooltipBox;
-    std::vector<std::unique_ptr<Dial>> dials;
-    DialBox db;
+
+    size_t navbarHeight = 32,
+        tooltipHeight = 120,
+        menuWidth = 160,
+        pedalWidth = 216;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

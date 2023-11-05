@@ -41,7 +41,9 @@
     <GROUP id="{E218D6CA-93C3-F37B-AC8F-45001CACCC66}" name="source">
       <GROUP id="{469AE178-36BE-10CD-73A4-F3DECC7F30E0}" name="ui">
         <GROUP id="{96FF65AD-CD9C-7574-FF47-E83DFFA441DE}" name="root">
-          <GROUP id="{5873AEE9-CF4B-3A15-3136-FF01D6C73AE7}" name="pedal"/>
+          <GROUP id="{5873AEE9-CF4B-3A15-3136-FF01D6C73AE7}" name="pedal">
+            <FILE id="h8QRlU" name="Pedal.h" compile="0" resource="0" file="source/ui/root/Pedal.h"/>
+          </GROUP>
           <GROUP id="{6069FBD2-B6D5-F52D-6E8A-12F14D301F74}" name="autoTrigger">
             <FILE id="LxbLrv" name="AutoTriggerMenu.h" compile="0" resource="0"
                   file="source/ui/root/autoTrigger/AutoTriggerMenu.h"/>
@@ -58,6 +60,7 @@
           <FILE id="fkwaXc" name="DialBox.h" compile="0" resource="0" file="source/ui/components/DialBox.h"/>
           <FILE id="h3lGcK" name="HoverForTooltip.h" compile="0" resource="0"
                 file="source/ui/components/HoverForTooltip.h"/>
+          <FILE id="uFzAEW" name="Switch.h" compile="0" resource="0" file="source/ui/components/Switch.h"/>
           <FILE id="bEcc8S" name="TooltipBox.h" compile="0" resource="0" file="source/ui/components/TooltipBox.h"/>
         </GROUP>
         <GROUP id="{8A982E73-6541-96CB-E6EC-5E4710F29B73}" name="lookAndFeel">
@@ -67,7 +70,6 @@
         </GROUP>
       </GROUP>
       <GROUP id="{2DEDD399-F219-91E8-3C8E-634467F6BB6A}" name="util">
-        <FILE id="MbB090" name="APVTS.h" compile="0" resource="0" file="source/util/APVTS.h"/>
         <GROUP id="{0989CE28-4B12-2EBF-7354-3433878B3646}" name="params">
           <FILE id="rUgVnv" name="ParameterBuilder.hpp" compile="0" resource="0"
                 file="source/util/ParameterBuilder.hpp"/>

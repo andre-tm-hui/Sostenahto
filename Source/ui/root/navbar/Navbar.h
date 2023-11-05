@@ -21,7 +21,7 @@
 class Navbar  : public juce::Component, juce::ActionBroadcaster
 {
 public:
-    Navbar(const std::vector<std::string>& tabLabels)
+    Navbar(const std::vector<std::string>& tabLabels, juce::ActionListener* listener)
     {
         assert(tabLabels.size() > 0);
 
@@ -31,11 +31,13 @@ public:
             tabButtons.back()->setToggleable(true);
             tabButtons.back()->setClickingTogglesState(true);
             tabButtons.back()->setLookAndFeel(&tblf);
-            tabButtons.back()->onStateChange = [=] { sendActionMessage("Change Tab " + label); };
+            tabButtons.back()->onClick = [=] { updateState("nav:" + label); };
             addAndMakeVisible(*tabButtons.back());
         }
 
         tabButtons[0]->setToggleState(true, juce::sendNotification);
+
+        addActionListener(listener);
     }
 
     ~Navbar() override
@@ -56,8 +58,17 @@ public:
     }
 
 private:
+    void updateState(const String& state) {
+        if (this->state != state) {
+            sendActionMessage(state);
+            this->state = state;
+        }
+    }
+
     TabButtonLF tblf;
     std::vector<std::unique_ptr<juce::TextButton>> tabButtons;
+
+    String state = "nav:Home";
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Navbar)
 };

@@ -17,41 +17,49 @@
 //==============================================================================
 /*
 */
-class DialBox : public juce::Component
+class DialBox : public juce::GroupComponent
 {
 public:
-    DialBox(const std::vector<juce::RangedAudioParameter*>& dials, TooltipBox& tooltipBox, const size_t& ncols = 2) :
-        ncols(ncols)
+    DialBox(const std::vector<juce::RangedAudioParameter*>& dials, TooltipBox& tooltipBox, const juce::String& label = "", const size_t& ncols = 2) :
+        ncols(ncols),
+        label(label)
     { 
         for (auto const dial : dials) {
             this->dials.emplace_back(std::make_unique<Dial>(dial, &tooltipBox));
             addAndMakeVisible(*this->dials.back());
         }
+
+        setText(label);
+        setTextLabelPosition(juce::Justification::centred);
     }
 
     ~DialBox() override
     {
     }
 
-    void paint (juce::Graphics& g) override
-    {
-        g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));   // clear the background
-    }
-
     void resized() override
     {
-        size_t dialWidth = getWidth() / ncols,
-               dialHeight = getHeight() / ((dials.size() + 1) / 2);
-        
-        for (int i = 0; i < dials.size(); i++) {
-            dials[i]->setBounds((i % 2) * dialWidth, (i / 2) * dialHeight, dialWidth, dialHeight);
+        size_t dialWidth = getWidth() / ncols;
+
+        auto area = getLocalBounds();
+        area.removeFromTop(juce::Label().getFont().getHeight());
+
+        juce::FlexBox fb;
+        fb.flexWrap = juce::FlexBox::Wrap::wrap;
+        fb.justifyContent = juce::FlexBox::JustifyContent::spaceBetween;
+
+        for (auto& d : dials) {
+            fb.items.add(juce::FlexItem(*d).withMinWidth(dialWidth).withFlex(1));
         }
+
+        fb.performLayout(area);
     }
 
     void setNcols(const size_t& n) { ncols = n; }
     size_t getNcols() { return ncols; }
 
 private:
+    juce::String label;
     std::vector<std::unique_ptr<Dial>> dials;
     size_t ncols;
 
